@@ -9,7 +9,9 @@ import java.util.UUID;
 public interface TopicRepository {
 
     boolean addTopic(TopicEntity topic);
+
     boolean removeTopic(UUID id);
+
     Iterable<TopicEntity> getAllTopics();
 
     boolean addComment(UUID topicId, CommentEntity comment);
