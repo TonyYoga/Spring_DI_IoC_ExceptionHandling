@@ -3,6 +3,7 @@ package com.telran.springdiiocexceptionhandling.controllers.dto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 /*
 TOPIC:
@@ -22,8 +23,10 @@ JSON Example of Topic request
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class TopicRequestDto {
+@ToString
+public class TopicDto {
     private String author;
     private String title;
     private String content;
+
 }

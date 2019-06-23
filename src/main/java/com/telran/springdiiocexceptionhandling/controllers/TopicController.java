@@ -1,14 +1,14 @@
 package com.telran.springdiiocexceptionhandling.controllers;
 
-import com.telran.springdiiocexceptionhandling.controllers.dto.TopicFullResponceDto;
-import com.telran.springdiiocexceptionhandling.controllers.dto.TopicRequestDto;
-import com.telran.springdiiocexceptionhandling.controllers.dto.TopicResponceDto;
+import com.telran.springdiiocexceptionhandling.controllers.dto.TopicFullDto;
+import com.telran.springdiiocexceptionhandling.controllers.dto.TopicDto;
+import com.telran.springdiiocexceptionhandling.controllers.dto.TopicResponseDto;
 
 public interface TopicController {
 
-    TopicResponceDto addTopic(TopicRequestDto topicDto);
+    TopicResponseDto addTopic(TopicDto topicDto);
 
-    Iterable<TopicFullResponceDto> getAllTopics();
+    Iterable<TopicFullDto> getAllTopics();
 
     void removeById(String id);
 }

@@ -1,8 +1,8 @@
 package com.telran.springdiiocexceptionhandling.controllers;
 
-import com.telran.springdiiocexceptionhandling.controllers.dto.TopicFullResponceDto;
-import com.telran.springdiiocexceptionhandling.controllers.dto.TopicRequestDto;
-import com.telran.springdiiocexceptionhandling.controllers.dto.TopicResponceDto;
+import com.telran.springdiiocexceptionhandling.controllers.dto.TopicFullDto;
+import com.telran.springdiiocexceptionhandling.controllers.dto.TopicDto;
+import com.telran.springdiiocexceptionhandling.controllers.dto.TopicResponseDto;
 import com.telran.springdiiocexceptionhandling.services.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,13 +16,13 @@ public class TopicControllerImpl implements TopicController {
 
     @Override
     @PostMapping
-    public TopicResponceDto addTopic(@RequestBody TopicRequestDto topicDto) {
+    public TopicResponseDto addTopic(@RequestBody TopicDto topicDto) {
         return null;
     }
 
     @Override
     @GetMapping
-    public Iterable<TopicFullResponceDto> getAllTopics() {
+    public Iterable<TopicFullDto> getAllTopics() {
         return null;
     }
 

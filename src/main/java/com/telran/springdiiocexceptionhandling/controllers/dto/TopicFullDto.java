@@ -1,10 +1,6 @@
 package com.telran.springdiiocexceptionhandling.controllers.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -34,12 +30,13 @@ Json example
 @AllArgsConstructor
 @Setter
 @Getter
-public class TopicFullResponceDto {
-    private String id;
-    private String author;
-    private String title;
-    private String content;
-    @JsonFormat(pattern = "dd/MM/yyyy hh:mm")
-    private LocalDateTime date;
-    private List<CommentResponceDto> comments;
+@ToString
+public class TopicFullDto extends TopicResponseDto {
+    private List<CommentFullDto> comments;
+
+    @Builder(builderMethodName = "fullTopicBuilder")
+    public TopicFullDto(String id, String author, String title, String content, LocalDateTime date, List<CommentFullDto> comments) {
+        super(id, author, title, content, date);
+        this.comments = comments;
+    }
 }

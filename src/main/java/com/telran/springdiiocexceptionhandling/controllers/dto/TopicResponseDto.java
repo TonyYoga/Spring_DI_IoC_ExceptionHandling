@@ -1,10 +1,7 @@
 package com.telran.springdiiocexceptionhandling.controllers.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -22,11 +19,17 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @Setter
-public class TopicResponceDto {
+@ToString
+public class TopicResponseDto extends TopicDto {
+
     private String id;
-    private String author;
-    private String title;
-    private String content;
-    @JsonFormat(pattern = "dd/MM/yyyy hh:mm")
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime date;
+
+    @Builder(builderMethodName = "topicResponseBuilder")
+    public TopicResponseDto(String author, String title, String content, String id, LocalDateTime date) {
+        super(author, title, content);
+        this.id = id;
+        this.date = date;
+    }
 }
