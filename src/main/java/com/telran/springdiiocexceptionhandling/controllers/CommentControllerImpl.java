@@ -1,12 +1,10 @@
 package com.telran.springdiiocexceptionhandling.controllers;
 
-import com.telran.springdiiocexceptionhandling.controllers.dto.AddCommentDto;
-import com.telran.springdiiocexceptionhandling.controllers.dto.CommentFullDto;
-import com.telran.springdiiocexceptionhandling.controllers.dto.RemoveCommentDto;
-import com.telran.springdiiocexceptionhandling.controllers.dto.UpdateCommentDto;
+import com.telran.springdiiocexceptionhandling.controllers.dto.*;
 import com.telran.springdiiocexceptionhandling.repository.TopicRepository;
 import com.telran.springdiiocexceptionhandling.repository.entity.CommentEntity;
 import com.telran.springdiiocexceptionhandling.repository.exception.IllegalIdException;
+import com.telran.springdiiocexceptionhandling.repository.exception.RepositoryException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -36,15 +34,16 @@ public class CommentControllerImpl implements CommentController {
 //        } catch (IllegalArgumentException ex) {
 //            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id format error!");
         } catch (IllegalIdException ex) {
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Topic with id: " + addCommentDto.getTopicId() + " wasn't removed");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage());
         }
     }
 
     @Override
     @DeleteMapping
-    public void removeComment(@RequestBody RemoveCommentDto remCommentDto) {
+    public SuccessResponseDto removeComment(@RequestBody RemoveCommentDto remCommentDto) {
         try {
             repository.removeComment(UUID.fromString(remCommentDto.getTopicId()), UUID.fromString(remCommentDto.getCommentId()));
+            return new SuccessResponseDto("Comment was " + remCommentDto.getCommentId() + "  successful removed");
 //        } catch (IllegalArgumentException ex) {
 //            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id format error!");
         } catch (IllegalIdException ex) {
@@ -55,14 +54,14 @@ public class CommentControllerImpl implements CommentController {
 
     @Override
     @PutMapping
-    public void updateComment(@RequestBody UpdateCommentDto updCommentDto) {
+    public SuccessResponseDto updateComment(@RequestBody UpdateCommentDto updCommentDto) {
         try {
             repository.updateComment(UUID.fromString(updCommentDto.getTopicId()), map(updCommentDto));
-            throw new ResponseStatusException(HttpStatus.OK, "Comment with id: "+ updCommentDto.getTopicId() + " was updated");
+            return new SuccessResponseDto("Comment with id: "+ updCommentDto.getTopicId() + " was updated");
 
 //        } catch (IllegalArgumentException ex) {
 //            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id format error!");
-        } catch (IllegalIdException ex) {
+        } catch (RepositoryException ex) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage());
         }
 

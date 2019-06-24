@@ -1,9 +1,6 @@
 package com.telran.springdiiocexceptionhandling.controllers;
 
-import com.telran.springdiiocexceptionhandling.controllers.dto.CommentFullDto;
-import com.telran.springdiiocexceptionhandling.controllers.dto.TopicFullDto;
-import com.telran.springdiiocexceptionhandling.controllers.dto.TopicDto;
-import com.telran.springdiiocexceptionhandling.controllers.dto.TopicResponseDto;
+import com.telran.springdiiocexceptionhandling.controllers.dto.*;
 import com.telran.springdiiocexceptionhandling.repository.TopicRepository;
 import com.telran.springdiiocexceptionhandling.repository.entity.CommentEntity;
 import com.telran.springdiiocexceptionhandling.repository.entity.TopicEntity;
@@ -47,20 +44,17 @@ public class TopicControllerImpl implements TopicController {
     @Override
     @GetMapping
     public Iterable<TopicFullDto> getAllTopics() {
-        List<TopicFullDto> res = StreamSupport.stream(repository.getAllTopics().spliterator(), false)
+        return StreamSupport.stream(repository.getAllTopics().spliterator(), false)
                 .map(this::map)
                 .collect(Collectors.toUnmodifiableList());
-
-        return res;
     }
 
     @Override
     @DeleteMapping("{id}")
-    public void removeById(@PathVariable("id") String id) {
+    public SuccessResponseDto removeById(@PathVariable("id") String id) {
         try {
-            if (repository.removeTopic(UUID.fromString(id))) {
-                throw new ResponseStatusException(HttpStatus.OK, "Topic with id: " + id + " was removed");
-            }
+            repository.removeTopic(UUID.fromString(id));
+            return new SuccessResponseDto("Topic with id: " + id + " was removed");
 //        } catch (IllegalArgumentException ex) {
 //            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id format error!");
         } catch (IllegalIdException ex) {

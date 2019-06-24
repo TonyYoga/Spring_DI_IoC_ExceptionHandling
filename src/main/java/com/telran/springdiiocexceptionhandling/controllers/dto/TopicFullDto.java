@@ -33,7 +33,6 @@ Json example
 @ToString
 public class TopicFullDto extends TopicResponseDto {
     private List<CommentFullDto> comments;
-
     @Builder(builderMethodName = "fullTopicBuilder")
     public TopicFullDto(String id, String author, String title, String content, LocalDateTime date, List<CommentFullDto> comments) {
         super(id, author, title, content, date);
