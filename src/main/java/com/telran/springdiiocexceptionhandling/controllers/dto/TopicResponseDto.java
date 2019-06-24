@@ -27,7 +27,7 @@ public class TopicResponseDto extends TopicDto {
     private LocalDateTime date;
 
     @Builder(builderMethodName = "topicResponseBuilder")
-    public TopicResponseDto(String author, String title, String content, String id, LocalDateTime date) {
+    public TopicResponseDto(String id, String author, String title, String content, LocalDateTime date) {
         super(author, title, content);
         this.id = id;
         this.date = date;
