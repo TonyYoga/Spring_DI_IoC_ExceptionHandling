@@ -1,11 +1,16 @@
 package com.telran.springdiiocexceptionhandling.repository;
 
+import com.telran.springdiiocexceptionhandling.providers.StoreProvider;
 import com.telran.springdiiocexceptionhandling.repository.entity.CommentEntity;
 import com.telran.springdiiocexceptionhandling.repository.entity.TopicEntity;
 import com.telran.springdiiocexceptionhandling.repository.exception.DuplicateIdException;
 import com.telran.springdiiocexceptionhandling.repository.exception.IllegalIdException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -17,6 +22,10 @@ import java.util.stream.Collectors;
 
 @Repository
 public class TopicRepositoryImpl implements TopicRepository {
+
+    @Autowired
+    StoreProvider provider;
+
     private final Lock readLock;
     private final Lock writeLock;
     private ConcurrentHashMap<UUID,TopicEntity> topics;
@@ -92,5 +101,22 @@ public class TopicRepositoryImpl implements TopicRepository {
             return true;
         }
         throw new IllegalIdException("Comment with id: " + commentId + " does not exist");
+    }
+
+    @PostConstruct
+    private void loadData() {
+        List<TopicEntity> entities = provider.loadData();
+        for (TopicEntity entity : entities) {
+            addTopic(entity);
+            if (!entity.getComments().isEmpty()) {
+                comments.putIfAbsent(entity.getId(), new CopyOnWriteArrayList<>(entity.getComments()));
+            }
+        }
+
+    }
+
+    @PreDestroy
+    private void storeData() {
+        provider.storeData(new ArrayList<>(topics.values()));
     }
 }

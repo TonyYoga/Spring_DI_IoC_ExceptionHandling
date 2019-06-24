@@ -9,10 +9,10 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
-
+@ToString
 public class CommentFullDto extends CommentDto{
     private String id;
-    @JsonFormat(pattern = "dd/MM/yyyy hh:mm")
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime date;
 
     @Builder(builderMethodName = "fullCommentBuilder")

@@ -55,7 +55,7 @@ public class TopicControllerImpl implements TopicController {
     }
 
     @Override
-    @PostMapping("{id}")
+    @DeleteMapping("{id}")
     public void removeById(@PathVariable("id") String id) {
         try {
             if (repository.removeTopic(UUID.fromString(id))) {
@@ -82,12 +82,13 @@ public class TopicControllerImpl implements TopicController {
     }
 
     private TopicFullDto map(TopicEntity topicEntity){
+//        System.out.println(topicEntity.toString());
         return TopicFullDto.fullTopicBuilder()
+                .id(topicEntity.getId().toString())
                 .author(topicEntity.getAuthor())
                 .title(topicEntity.getTitle())
                 .content(topicEntity.getContent())
                 .comments(map(topicEntity.getComments()))
-                .id(topicEntity.getId().toString())
                 .date(topicEntity.getDate())
                 .build();
     }

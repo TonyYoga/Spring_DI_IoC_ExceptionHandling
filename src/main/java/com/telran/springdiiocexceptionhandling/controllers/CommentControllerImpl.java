@@ -9,8 +9,7 @@ import com.telran.springdiiocexceptionhandling.repository.entity.CommentEntity;
 import com.telran.springdiiocexceptionhandling.repository.exception.IllegalIdException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
@@ -23,7 +22,8 @@ public class CommentControllerImpl implements CommentController {
     TopicRepository repository;
 
     @Override
-    public CommentFullDto addComment(AddCommentDto addCommentDto) {
+    @PostMapping
+    public CommentFullDto addComment(@RequestBody AddCommentDto addCommentDto) {
         try {
             CommentFullDto commentFullDto = CommentFullDto.fullCommentBuilder()
                     .id(UUID.randomUUID().toString())
@@ -31,6 +31,7 @@ public class CommentControllerImpl implements CommentController {
                     .message(addCommentDto.getMessage())
                     .date(LocalDateTime.now())
                     .build();
+            System.out.println(commentFullDto.toString());
             repository.addComment(UUID.fromString(addCommentDto.getTopicId()), map(commentFullDto));
             return commentFullDto;
         } catch (IllegalArgumentException ex) {
@@ -41,7 +42,8 @@ public class CommentControllerImpl implements CommentController {
     }
 
     @Override
-    public void removeComment(RemoveCommentDto remCommentDto) {
+    @DeleteMapping
+    public void removeComment(@RequestBody RemoveCommentDto remCommentDto) {
         try {
             repository.removeComment(UUID.fromString(remCommentDto.getTopicId()), UUID.fromString(remCommentDto.getCommentId()));
         } catch (IllegalArgumentException ex) {
@@ -53,7 +55,8 @@ public class CommentControllerImpl implements CommentController {
     }
 
     @Override
-    public void updateComment(UpdateCommentDto updCommentDto) {
+    @PutMapping
+    public void updateComment(@RequestBody UpdateCommentDto updCommentDto) {
         try {
             repository.updateComment(UUID.fromString(updCommentDto.getTopicId()), map(updCommentDto));
             throw new ResponseStatusException(HttpStatus.OK, "Comment with id: "+ updCommentDto.getTopicId() + " was updated");
