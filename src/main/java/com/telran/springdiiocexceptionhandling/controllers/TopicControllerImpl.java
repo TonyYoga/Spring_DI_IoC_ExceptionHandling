@@ -61,8 +61,8 @@ public class TopicControllerImpl implements TopicController {
             if (repository.removeTopic(UUID.fromString(id))) {
                 throw new ResponseStatusException(HttpStatus.OK, "Topic with id: " + id + " was removed");
             }
-        } catch (IllegalArgumentException ex) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id format error!");
+//        } catch (IllegalArgumentException ex) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id format error!");
         } catch (IllegalIdException ex) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Topic with id: " + id + " wasn't removed");
         }
@@ -82,7 +82,6 @@ public class TopicControllerImpl implements TopicController {
     }
 
     private TopicFullDto map(TopicEntity topicEntity){
-//        System.out.println(topicEntity.toString());
         return TopicFullDto.fullTopicBuilder()
                 .id(topicEntity.getId().toString())
                 .author(topicEntity.getAuthor())

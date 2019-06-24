@@ -31,11 +31,10 @@ public class CommentControllerImpl implements CommentController {
                     .message(addCommentDto.getMessage())
                     .date(LocalDateTime.now())
                     .build();
-            System.out.println(commentFullDto.toString());
             repository.addComment(UUID.fromString(addCommentDto.getTopicId()), map(commentFullDto));
             return commentFullDto;
-        } catch (IllegalArgumentException ex) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id format error!");
+//        } catch (IllegalArgumentException ex) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id format error!");
         } catch (IllegalIdException ex) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Topic with id: " + addCommentDto.getTopicId() + " wasn't removed");
         }
@@ -46,8 +45,8 @@ public class CommentControllerImpl implements CommentController {
     public void removeComment(@RequestBody RemoveCommentDto remCommentDto) {
         try {
             repository.removeComment(UUID.fromString(remCommentDto.getTopicId()), UUID.fromString(remCommentDto.getCommentId()));
-        } catch (IllegalArgumentException ex) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id format error!");
+//        } catch (IllegalArgumentException ex) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id format error!");
         } catch (IllegalIdException ex) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage());
         }
@@ -61,8 +60,8 @@ public class CommentControllerImpl implements CommentController {
             repository.updateComment(UUID.fromString(updCommentDto.getTopicId()), map(updCommentDto));
             throw new ResponseStatusException(HttpStatus.OK, "Comment with id: "+ updCommentDto.getTopicId() + " was updated");
 
-        } catch (IllegalArgumentException ex) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id format error!");
+//        } catch (IllegalArgumentException ex) {
+//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id format error!");
         } catch (IllegalIdException ex) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage());
         }
