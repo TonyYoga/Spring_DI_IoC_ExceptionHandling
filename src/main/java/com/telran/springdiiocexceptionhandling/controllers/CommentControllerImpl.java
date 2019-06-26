@@ -1,6 +1,7 @@
 package com.telran.springdiiocexceptionhandling.controllers;
 
 import com.telran.springdiiocexceptionhandling.controllers.dto.*;
+import com.telran.springdiiocexceptionhandling.monitoring.CommentControllerMetric;
 import com.telran.springdiiocexceptionhandling.repository.TopicRepository;
 import com.telran.springdiiocexceptionhandling.repository.entity.CommentEntity;
 import com.telran.springdiiocexceptionhandling.repository.exception.*;
@@ -21,6 +22,11 @@ public class CommentControllerImpl implements CommentController {
     @Autowired
     TopicRepository repository;
 
+    CommentControllerMetric commentControllerMetric;
+
+    public CommentControllerImpl(CommentControllerMetric commentControllerMetric) {
+        this.commentControllerMetric = commentControllerMetric;
+    }
 
     @ApiOperation(value = "Add new comment", response = CommentFullDto.class)
     @ApiResponses(value = {
@@ -39,6 +45,7 @@ public class CommentControllerImpl implements CommentController {
                     .date(LocalDateTime.now())
                     .build();
             repository.addComment(UUID.fromString(addCommentDto.getTopicId()), map(commentFullDto));
+            commentControllerMetric.handleAddComment();
             return commentFullDto;
 //        } catch (IllegalArgumentException ex) {
 //            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id format error!");
@@ -59,6 +66,7 @@ public class CommentControllerImpl implements CommentController {
     public SuccessResponseDto removeComment(@RequestBody RemoveCommentDto remCommentDto) {
         try {
             repository.removeComment(UUID.fromString(remCommentDto.getTopicId()), UUID.fromString(remCommentDto.getCommentId()));
+            commentControllerMetric.handleRemoveComment();
             return new SuccessResponseDto("Comment was " + remCommentDto.getCommentId() + "  successful removed");
         } catch (IllegalIdException ex) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage());
@@ -78,6 +86,7 @@ public class CommentControllerImpl implements CommentController {
     public SuccessResponseDto updateComment(@RequestBody UpdateCommentDto updCommentDto) {
         try {
             repository.updateComment(UUID.fromString(updCommentDto.getTopicId()), map(updCommentDto));
+            commentControllerMetric.handleUpdateComment();
             return new SuccessResponseDto("Comment with id: "+ updCommentDto.getTopicId() + " was updated");
         } catch (RepositoryException ex) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage());

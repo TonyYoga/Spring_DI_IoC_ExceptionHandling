@@ -1,6 +1,7 @@
 package com.telran.springdiiocexceptionhandling.controllers;
 
 import com.telran.springdiiocexceptionhandling.controllers.dto.*;
+import com.telran.springdiiocexceptionhandling.monitoring.TopicControllerMetric;
 import com.telran.springdiiocexceptionhandling.repository.TopicRepository;
 import com.telran.springdiiocexceptionhandling.repository.entity.CommentEntity;
 import com.telran.springdiiocexceptionhandling.repository.entity.TopicEntity;
@@ -26,6 +27,11 @@ public class TopicControllerImpl implements TopicController {
     @Autowired
     TopicRepository repository;
 
+    private TopicControllerMetric controllerMetric;
+
+    public TopicControllerImpl(TopicControllerMetric controllerMetric) {
+        this.controllerMetric = controllerMetric;
+    }
 
     @ApiOperation(value = "Add new topic", response = TopicResponseDto.class)
     @ApiResponses(value = {
@@ -45,6 +51,7 @@ public class TopicControllerImpl implements TopicController {
                 .build();
         try {
             repository.addTopic(map(res));
+            controllerMetric.handleAddTopic();
         } catch (DuplicateIdException ex) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage());
         }
@@ -58,6 +65,7 @@ public class TopicControllerImpl implements TopicController {
     @Override
     @GetMapping
     public Iterable<TopicFullDto> getAllTopics() {
+        controllerMetric.handleGetAllTopic();
         return StreamSupport.stream(repository.getAllTopics().spliterator(), false)
                 .map(this::map)
                 .collect(Collectors.toUnmodifiableList());
@@ -74,6 +82,7 @@ public class TopicControllerImpl implements TopicController {
     @DeleteMapping("{id}")
     public SuccessResponseDto removeById(@PathVariable("id") String id) {
         try {
+            controllerMetric.handleRemoveTopic();
             repository.removeTopic(UUID.fromString(id));
             return new SuccessResponseDto("Topic with id: " + id + " was removed");
 //        } catch (IllegalArgumentException ex) {
