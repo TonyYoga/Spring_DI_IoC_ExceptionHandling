@@ -6,6 +6,9 @@ import com.telran.springdiiocexceptionhandling.repository.entity.CommentEntity;
 import com.telran.springdiiocexceptionhandling.repository.entity.TopicEntity;
 import com.telran.springdiiocexceptionhandling.repository.exception.DuplicateIdException;
 import com.telran.springdiiocexceptionhandling.repository.exception.IllegalIdException;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -23,6 +26,13 @@ public class TopicControllerImpl implements TopicController {
     @Autowired
     TopicRepository repository;
 
+
+    @ApiOperation(value = "Add new topic", response = TopicResponseDto.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = ""),
+            @ApiResponse(code = 409, message = "Topic with id: {id} already exist!")
+    }
+    )
     @Override
     @PostMapping
     public TopicResponseDto addTopic(@RequestBody TopicDto topicDto) {
@@ -36,11 +46,15 @@ public class TopicControllerImpl implements TopicController {
         try {
             repository.addTopic(map(res));
         } catch (DuplicateIdException ex) {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage());
         }
         return res;
     }
-
+    @ApiOperation(value = "Get All Topics", response = TopicFullDto[].class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = ""),
+    }
+    )
     @Override
     @GetMapping
     public Iterable<TopicFullDto> getAllTopics() {
@@ -48,6 +62,13 @@ public class TopicControllerImpl implements TopicController {
                 .map(this::map)
                 .collect(Collectors.toUnmodifiableList());
     }
+
+    @ApiOperation(value = "Remove topic by Id", response = SuccessResponseDto.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Topic with id: {id} was removed"),
+            @ApiResponse(code = 409, message = "Topic with id: {id} wasn't removed")
+    }
+    )
 
     @Override
     @DeleteMapping("{id}")

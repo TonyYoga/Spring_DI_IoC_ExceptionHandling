@@ -1,6 +1,8 @@
 package com.telran.springdiiocexceptionhandling.controllers.dto;
 
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +19,11 @@ message - String format, required
 @NoArgsConstructor
 @Setter
 @Getter
+
+@ApiModel(value = "CommentDto",description = "Comment data transfer object")
 public class CommentDto {
+    @ApiModelProperty(notes = "Author of Comment")
     private String author;
+    @ApiModelProperty(notes = "Message")
     private String message;
 }

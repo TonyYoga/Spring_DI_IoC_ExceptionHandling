@@ -1,5 +1,7 @@
 package com.telran.springdiiocexceptionhandling.controllers.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,9 +26,14 @@ JSON Example of Topic request
 @AllArgsConstructor
 @Getter
 @ToString
+@ApiModel(value = "TopicDto",description = "Topic data transfer object")
+
 public class TopicDto {
+    @ApiModelProperty(notes = "Author of topic")
     private String author;
+    @ApiModelProperty(notes = "Title of topic")
     private String title;
+    @ApiModelProperty(notes = "Topic content")
     private String content;
 
 }

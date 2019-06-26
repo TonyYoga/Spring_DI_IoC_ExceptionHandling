@@ -1,5 +1,7 @@
 package com.telran.springdiiocexceptionhandling.repository.entity;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -18,6 +20,5 @@ public class TopicEntity {
     private String title;
     private String content;
     private LocalDateTime date;
-
     private List<CommentEntity> comments;
 }

@@ -3,8 +3,10 @@ package com.telran.springdiiocexceptionhandling.controllers;
 import com.telran.springdiiocexceptionhandling.controllers.dto.*;
 import com.telran.springdiiocexceptionhandling.repository.TopicRepository;
 import com.telran.springdiiocexceptionhandling.repository.entity.CommentEntity;
-import com.telran.springdiiocexceptionhandling.repository.exception.IllegalIdException;
-import com.telran.springdiiocexceptionhandling.repository.exception.RepositoryException;
+import com.telran.springdiiocexceptionhandling.repository.exception.*;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +21,13 @@ public class CommentControllerImpl implements CommentController {
     @Autowired
     TopicRepository repository;
 
+
+    @ApiOperation(value = "Add new comment", response = CommentFullDto.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = ""),
+            @ApiResponse(code = 409, message = "Topic with id: {id} does not exist")
+    }
+    )
     @Override
     @PostMapping
     public CommentFullDto addComment(@RequestBody AddCommentDto addCommentDto) {
@@ -38,29 +47,38 @@ public class CommentControllerImpl implements CommentController {
         }
     }
 
+    @ApiOperation(value = "Remove comment", response = SuccessResponseDto.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Comment with id: {id} was removed"),
+            @ApiResponse(code = 409, message = "Topic with id: {id} does not exist"),
+            @ApiResponse(code = 409, message = "Comment with id: {id} does not exist")
+    }
+    )
     @Override
     @DeleteMapping
     public SuccessResponseDto removeComment(@RequestBody RemoveCommentDto remCommentDto) {
         try {
             repository.removeComment(UUID.fromString(remCommentDto.getTopicId()), UUID.fromString(remCommentDto.getCommentId()));
             return new SuccessResponseDto("Comment was " + remCommentDto.getCommentId() + "  successful removed");
-//        } catch (IllegalArgumentException ex) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id format error!");
         } catch (IllegalIdException ex) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage());
         }
 
     }
 
+    @ApiOperation(value = "Update comment", response = SuccessResponseDto.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Comment with id: {id} was updated"),
+            @ApiResponse(code = 409, message = "Topic with id: {id} does not exist"),
+            @ApiResponse(code = 409, message = "Comment with id: {id} does not exist")
+    }
+    )
     @Override
     @PutMapping
     public SuccessResponseDto updateComment(@RequestBody UpdateCommentDto updCommentDto) {
         try {
             repository.updateComment(UUID.fromString(updCommentDto.getTopicId()), map(updCommentDto));
             return new SuccessResponseDto("Comment with id: "+ updCommentDto.getTopicId() + " was updated");
-
-//        } catch (IllegalArgumentException ex) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id format error!");
         } catch (RepositoryException ex) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage());
         }

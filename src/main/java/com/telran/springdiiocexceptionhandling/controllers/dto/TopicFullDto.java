@@ -1,5 +1,7 @@
 package com.telran.springdiiocexceptionhandling.controllers.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -31,7 +33,10 @@ Json example
 @Setter
 @Getter
 @ToString
+@ApiModel(value = "TopicFullDto",description = "Full topic data transfer object extends TopicResponseDto")
+
 public class TopicFullDto extends TopicResponseDto {
+    @ApiModelProperty(notes = "List of comments")
     private List<CommentFullDto> comments;
     @Builder(builderMethodName = "fullTopicBuilder")
     public TopicFullDto(String id, String author, String title, String content, LocalDateTime date, List<CommentFullDto> comments) {
