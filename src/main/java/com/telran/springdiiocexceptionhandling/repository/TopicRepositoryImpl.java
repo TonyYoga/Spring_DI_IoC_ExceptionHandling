@@ -6,6 +6,7 @@ import com.telran.springdiiocexceptionhandling.repository.entity.TopicEntity;
 import com.telran.springdiiocexceptionhandling.repository.exception.DuplicateIdException;
 import com.telran.springdiiocexceptionhandling.repository.exception.IllegalIdException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
 @Repository
 public class TopicRepositoryImpl implements TopicRepository {
 
-    @Autowired
+//    @Autowired
     StoreProvider provider;
 
     private final Lock readLock;
@@ -31,7 +32,8 @@ public class TopicRepositoryImpl implements TopicRepository {
     private ConcurrentHashMap<UUID,TopicEntity> topics;
     private ConcurrentHashMap<UUID, CopyOnWriteArrayList<CommentEntity>> comments;
 
-    public TopicRepositoryImpl() {
+    public TopicRepositoryImpl(@Qualifier("topicProvider") StoreProvider provider) {
+        this.provider = provider;
         ReadWriteLock lock = new ReentrantReadWriteLock();
         readLock = lock.readLock();
         writeLock = lock.writeLock();

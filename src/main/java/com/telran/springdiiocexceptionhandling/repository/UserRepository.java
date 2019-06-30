@@ -3,7 +3,6 @@ package com.telran.springdiiocexceptionhandling.repository;
 import com.telran.springdiiocexceptionhandling.repository.entity.UserEntity;
 import org.springframework.stereotype.Repository;
 
-@Repository
 public interface UserRepository {
 
     boolean addUser(UserEntity userEntity);
