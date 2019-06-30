@@ -25,14 +25,15 @@ import java.util.stream.Collectors;
 public class TopicRepositoryImpl implements TopicRepository {
 
 //    @Autowired
-    StoreProvider provider;
+    private StoreProvider<TopicEntity> provider;
 
     private final Lock readLock;
     private final Lock writeLock;
     private ConcurrentHashMap<UUID,TopicEntity> topics;
     private ConcurrentHashMap<UUID, CopyOnWriteArrayList<CommentEntity>> comments;
 
-    public TopicRepositoryImpl(@Qualifier("topicProvider") StoreProvider provider) {
+    public TopicRepositoryImpl(@Qualifier("topicProvider") StoreProvider<TopicEntity> provider) {
+        System.out.println(">>>Topic provider");
         this.provider = provider;
         ReadWriteLock lock = new ReentrantReadWriteLock();
         readLock = lock.readLock();
@@ -110,7 +111,7 @@ public class TopicRepositoryImpl implements TopicRepository {
         List<TopicEntity> entities = provider.loadData();
         for (TopicEntity entity : entities) {
             addTopic(entity);
-            if (!entity.getComments().isEmpty()) {
+            if (entity.getComments() != null && !entity.getComments().isEmpty()) {
                 comments.putIfAbsent(entity.getId(), new CopyOnWriteArrayList<>(entity.getComments()));
             }
         }

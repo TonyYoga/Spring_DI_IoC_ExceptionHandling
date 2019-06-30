@@ -21,8 +21,10 @@ public class UserControllerImpl implements UserController {
     @PostMapping
     @Override
     public SuccessResponseDto registration(@RequestBody UserDto userDto) {
+        System.out.println(">>>>>registration");
         try {
             userService.addUser(userDto);
+
             return new SuccessResponseDto("User with email " + userDto.getEmail() + " was added");
         } catch (ServiceException ex) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "User with email " + userDto.getEmail() + " already exist");
