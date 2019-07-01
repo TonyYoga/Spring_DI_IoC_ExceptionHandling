@@ -9,7 +9,7 @@ public class TokenServiceImpl implements TokenService {
     @Override
     public UserCredentials decodeToken(String token) {
         int index = token.indexOf(" ");
-        token.substring(index + 1);
+        token = token.substring(index + 1);
         byte[] base64DecodeBytes = Base64.getDecoder().decode(token);
         token = new String(base64DecodeBytes);
         String[] auth = token.split(":");

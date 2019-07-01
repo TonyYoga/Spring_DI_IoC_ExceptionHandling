@@ -28,8 +28,9 @@ public class AuthenticationFilter implements Filter {
         //TODO need to check getAllTopic Request
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-
-        if (request.getMethod() != HttpSender.Method.GET.name()) {
+        String path = request.getServletPath();
+        String method = request.getMethod();
+        if (!method.equals("GET") && !path.startsWith("/user")) {
             String token = request.getHeader("Authorization");
             if (token == null) {
                 response.addHeader("WWW-Authenticate", "Basic realm=\"User Visible Realm\"");

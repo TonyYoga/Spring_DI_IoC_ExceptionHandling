@@ -21,7 +21,6 @@ public class UserControllerImpl implements UserController {
     @PostMapping
     @Override
     public SuccessResponseDto registration(@RequestBody UserDto userDto) {
-        System.out.println(">>>>>registration");
         try {
             userService.addUser(userDto);
 

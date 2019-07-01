@@ -3,7 +3,6 @@ package com.telran.springdiiocexceptionhandling.service;
 import com.telran.springdiiocexceptionhandling.repository.TopicRepository;
 import com.telran.springdiiocexceptionhandling.repository.entity.CommentEntity;
 import com.telran.springdiiocexceptionhandling.repository.exception.IllegalIdException;
-import com.telran.springdiiocexceptionhandling.service.OwnerValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

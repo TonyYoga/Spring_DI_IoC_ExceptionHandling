@@ -128,7 +128,7 @@ public class TopicRepositoryImpl implements TopicRepository {
                 throw new IllegalIdException("Topic with id: " + topicId + " does not exist");
             }
             CommentEntity res = curr.stream()
-                    .filter(comment -> comment.getId().toString().equals(commentId))
+                    .filter(comment -> comment.getId().equals(commentId))
                     .findAny()
                     .orElseThrow(() -> new IllegalIdException("Comment with id: " + commentId + " does not exist"));
             return res;
