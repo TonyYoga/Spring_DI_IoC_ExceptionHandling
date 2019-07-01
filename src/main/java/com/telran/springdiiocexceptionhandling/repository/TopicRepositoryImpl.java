@@ -5,7 +5,6 @@ import com.telran.springdiiocexceptionhandling.repository.entity.CommentEntity;
 import com.telran.springdiiocexceptionhandling.repository.entity.TopicEntity;
 import com.telran.springdiiocexceptionhandling.repository.exception.DuplicateIdException;
 import com.telran.springdiiocexceptionhandling.repository.exception.IllegalIdException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
@@ -81,6 +80,20 @@ public class TopicRepositoryImpl implements TopicRepository {
     }
 
     @Override
+    public TopicEntity getTopicById(UUID topicId) {
+        readLock.lock();
+        try {
+            TopicEntity topicEntity = topics.get(topicId);
+            if (topicEntity == null) {
+                throw new IllegalIdException("Topic with id: " + topicId + " does not exist");
+            }
+            return topicEntity;
+        }finally {
+            readLock.unlock();
+        }
+    }
+
+    @Override
     public boolean addComment(UUID topicId, CommentEntity comment) {
         readLock.lock();
         try {
@@ -104,6 +117,24 @@ public class TopicRepositoryImpl implements TopicRepository {
             return true;
         }
         throw new IllegalIdException("Comment with id: " + commentId + " does not exist");
+    }
+
+    @Override
+    public CommentEntity getCommentById(UUID topicId, UUID commentId) {
+        readLock.lock();
+        try {
+            CopyOnWriteArrayList<CommentEntity> curr = comments.get(topicId);
+            if (curr == null) {
+                throw new IllegalIdException("Topic with id: " + topicId + " does not exist");
+            }
+            CommentEntity res = curr.stream()
+                    .filter(comment -> comment.getId().toString().equals(commentId))
+                    .findAny()
+                    .orElseThrow(() -> new IllegalIdException("Comment with id: " + commentId + " does not exist"));
+            return res;
+        }finally {
+            readLock.unlock();
+        }
     }
 
     @PostConstruct

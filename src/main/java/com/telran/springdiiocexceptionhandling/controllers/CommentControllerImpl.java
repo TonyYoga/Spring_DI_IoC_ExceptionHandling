@@ -5,6 +5,8 @@ import com.telran.springdiiocexceptionhandling.monitoring.CommentControllerMetri
 import com.telran.springdiiocexceptionhandling.repository.TopicRepository;
 import com.telran.springdiiocexceptionhandling.repository.entity.CommentEntity;
 import com.telran.springdiiocexceptionhandling.repository.exception.*;
+import com.telran.springdiiocexceptionhandling.service.TokenService;
+import com.telran.springdiiocexceptionhandling.service.UserCredentials;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -22,6 +24,9 @@ public class CommentControllerImpl implements CommentController {
     @Autowired
     TopicRepository repository;
 
+    @Autowired
+    TokenService validationService;
+
     CommentControllerMetric commentControllerMetric;
 
     public CommentControllerImpl(CommentControllerMetric commentControllerMetric) {
@@ -36,19 +41,21 @@ public class CommentControllerImpl implements CommentController {
     )
     @Override
     @PostMapping
-    public CommentFullDto addComment(@RequestBody AddCommentDto addCommentDto) {
+    public CommentFullDto addComment(@RequestBody AddCommentDto addCommentDto, @RequestHeader("Authorization") String token) {
+
+        //TODO
+        UserCredentials user = validationService.decodeToken(token);
+
         try {
             CommentFullDto commentFullDto = CommentFullDto.fullCommentBuilder()
                     .id(UUID.randomUUID().toString())
-                    .author(addCommentDto.getAuthor())
+                    .author(user.getEmail())
                     .message(addCommentDto.getMessage())
                     .date(LocalDateTime.now())
                     .build();
             repository.addComment(UUID.fromString(addCommentDto.getTopicId()), map(commentFullDto));
             commentControllerMetric.handleAddComment();
             return commentFullDto;
-//        } catch (IllegalArgumentException ex) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id format error!");
         } catch (IllegalIdException ex) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage());
         }
@@ -63,8 +70,12 @@ public class CommentControllerImpl implements CommentController {
     )
     @Override
     @DeleteMapping
-    public SuccessResponseDto removeComment(@RequestBody RemoveCommentDto remCommentDto) {
+    public SuccessResponseDto removeComment(@RequestBody RemoveCommentDto remCommentDto, @RequestHeader("Authorization") String token) {
+        UserCredentials user = validationService.decodeToken(token);
         try {
+            if (!repository.getCommentById(UUID.fromString(remCommentDto.getTopicId()), UUID.fromString(remCommentDto.getCommentId())).getAuthor().equals(user.getEmail())) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Wrong owner of comment with id " + remCommentDto.getCommentId());
+            }
             repository.removeComment(UUID.fromString(remCommentDto.getTopicId()), UUID.fromString(remCommentDto.getCommentId()));
             commentControllerMetric.handleRemoveComment();
             return new SuccessResponseDto("Comment was " + remCommentDto.getCommentId() + "  successful removed");
@@ -83,8 +94,12 @@ public class CommentControllerImpl implements CommentController {
     )
     @Override
     @PutMapping
-    public SuccessResponseDto updateComment(@RequestBody UpdateCommentDto updCommentDto) {
+    public SuccessResponseDto updateComment(@RequestBody UpdateCommentDto updCommentDto, @RequestHeader("Authorization") String token) {
+        UserCredentials user = validationService.decodeToken(token);
         try {
+            if (!updCommentDto.getAuthor().equals(user.getEmail())) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Wrong owner of comment with id " + updCommentDto.getId());
+            }
             repository.updateComment(UUID.fromString(updCommentDto.getTopicId()), map(updCommentDto));
             commentControllerMetric.handleUpdateComment();
             return new SuccessResponseDto("Comment with id: "+ updCommentDto.getTopicId() + " was updated");

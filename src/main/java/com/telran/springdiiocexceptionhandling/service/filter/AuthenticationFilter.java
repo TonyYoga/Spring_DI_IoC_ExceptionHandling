@@ -4,6 +4,7 @@ import com.telran.springdiiocexceptionhandling.repository.UserRepository;
 import com.telran.springdiiocexceptionhandling.repository.entity.UserEntity;
 import com.telran.springdiiocexceptionhandling.service.TokenService;
 import com.telran.springdiiocexceptionhandling.service.UserCredentials;
+import io.micrometer.core.ipc.http.HttpSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -28,32 +29,33 @@ public class AuthenticationFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        String token = request.getHeader("Authorization");
-        if (token == null) {
-            response.addHeader("WWW-Authenticate","Basic realm=\"User Visible Realm\"");
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "Unauthorized");
-            return;
-        }
-        UserCredentials userCredentials = null;
-        try {
-            userCredentials = validationService.decodeToken(token);
-        } catch (Exception ex) {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "Wrong token format");
-            return;
-        }
+        if (request.getMethod() != HttpSender.Method.GET.name()) {
+            String token = request.getHeader("Authorization");
+            if (token == null) {
+                response.addHeader("WWW-Authenticate", "Basic realm=\"User Visible Realm\"");
+                response.sendError(HttpStatus.UNAUTHORIZED.value(), "Unauthorized");
+                return;
+            }
+            UserCredentials userCredentials = null;
+            try {
+                userCredentials = validationService.decodeToken(token);
+            } catch (Exception ex) {
+                response.sendError(HttpStatus.UNAUTHORIZED.value(), "Wrong token format");
+                return;
+            }
 
-        UserEntity user = userRepository.getUserByEmail(userCredentials.getEmail());
+            UserEntity user = userRepository.getUserByEmail(userCredentials.getEmail());
 
-        if (user == null) {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "User not found");
-            return;
+            if (user == null) {
+                response.sendError(HttpStatus.UNAUTHORIZED.value(), "User not found");
+                return;
+            }
+
+            if (!user.getPassword().equals(userCredentials.getPassword())) {
+                response.sendError(HttpStatus.UNAUTHORIZED.value(), "Wrong email of password");
+                return;
+            }
         }
-
-        if (!user.getPassword().equals(userCredentials.getPassword())) {
-            response.sendError(HttpStatus.UNAUTHORIZED.value(), "Wrong email of password");
-            return;
-        }
-
         filterChain.doFilter(servletRequest, servletResponse);
 
     }

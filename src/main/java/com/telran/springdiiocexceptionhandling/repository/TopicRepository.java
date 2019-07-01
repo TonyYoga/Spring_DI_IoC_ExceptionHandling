@@ -16,6 +16,8 @@ public interface TopicRepository {
 
     boolean addComment(UUID topicId, CommentEntity comment);
     boolean removeComment(UUID topicId, UUID commentId);
+    TopicEntity getTopicById(UUID topicId);
+    CommentEntity getCommentById(UUID topicId, UUID commentId);
 
     default boolean updateComment(UUID topicId, CommentEntity comment){
         if(removeComment(topicId,comment.getId())){

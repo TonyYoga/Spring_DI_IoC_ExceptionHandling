@@ -7,9 +7,9 @@ import com.telran.springdiiocexceptionhandling.controllers.dto.TopicResponseDto;
 
 public interface TopicController {
 
-    TopicResponseDto addTopic(TopicDto topicDto);
+    TopicResponseDto addTopic(TopicDto topicDto, String token);
 
     Iterable<TopicFullDto> getAllTopics();
 
-    SuccessResponseDto removeById(String id);
+    SuccessResponseDto removeById(String id, String token);
 }

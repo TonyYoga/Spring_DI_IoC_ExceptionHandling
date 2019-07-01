@@ -7,6 +7,8 @@ import com.telran.springdiiocexceptionhandling.repository.entity.CommentEntity;
 import com.telran.springdiiocexceptionhandling.repository.entity.TopicEntity;
 import com.telran.springdiiocexceptionhandling.repository.exception.DuplicateIdException;
 import com.telran.springdiiocexceptionhandling.repository.exception.IllegalIdException;
+import com.telran.springdiiocexceptionhandling.service.TokenService;
+import com.telran.springdiiocexceptionhandling.service.UserCredentials;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -24,8 +26,12 @@ import java.util.stream.StreamSupport;
 @RestController
 @RequestMapping("topic")
 public class TopicControllerImpl implements TopicController {
+
     @Autowired
     TopicRepository repository;
+
+    @Autowired
+    private TokenService validationService;
 
     private TopicControllerMetric controllerMetric;
 
@@ -41,10 +47,11 @@ public class TopicControllerImpl implements TopicController {
     )
     @Override
     @PostMapping
-    public TopicResponseDto addTopic(@RequestBody TopicDto topicDto) {
+    public TopicResponseDto addTopic(@RequestBody TopicDto topicDto, @RequestHeader("Authorization") String token) {
+        UserCredentials user = validationService.decodeToken(token);
         TopicResponseDto res = TopicResponseDto.topicResponseBuilder()
                 .id(UUID.randomUUID().toString())
-                .author(topicDto.getAuthor())
+                .author(user.getEmail()) //TODO - need authorName
                 .title(topicDto.getTitle())
                 .content(topicDto.getContent())
                 .date(LocalDateTime.now())
@@ -80,13 +87,16 @@ public class TopicControllerImpl implements TopicController {
 
     @Override
     @DeleteMapping("{id}")
-    public SuccessResponseDto removeById(@PathVariable("id") String id) {
+    public SuccessResponseDto removeById(@PathVariable("id") String id, @RequestHeader("Authorization") String token) {
+        //TODO
+        UserCredentials user = validationService.decodeToken(token);
         try {
             controllerMetric.handleRemoveTopic();
+            if (!repository.getTopicById(UUID.fromString(id)).getAuthor().equals(user.getEmail())) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Topic with id: " + id + " wasn't removed");
+            }
             repository.removeTopic(UUID.fromString(id));
             return new SuccessResponseDto("Topic with id: " + id + " was removed");
-//        } catch (IllegalArgumentException ex) {
-//            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Id format error!");
         } catch (IllegalIdException ex) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Topic with id: " + id + " wasn't removed");
         }
