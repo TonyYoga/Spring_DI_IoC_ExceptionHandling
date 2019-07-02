@@ -5,6 +5,7 @@ import com.telran.springdiiocexceptionhandling.monitoring.CommentControllerMetri
 import com.telran.springdiiocexceptionhandling.repository.TopicRepository;
 import com.telran.springdiiocexceptionhandling.repository.entity.CommentEntity;
 import com.telran.springdiiocexceptionhandling.repository.exception.*;
+import com.telran.springdiiocexceptionhandling.service.OwnerValidator;
 import com.telran.springdiiocexceptionhandling.service.TokenService;
 import com.telran.springdiiocexceptionhandling.service.UserCredentials;
 import io.swagger.annotations.ApiOperation;
@@ -27,6 +28,9 @@ public class CommentControllerImpl implements CommentController {
     @Autowired
     TokenService validationService;
 
+    @Autowired
+    OwnerValidator ownerValidator;
+
     CommentControllerMetric commentControllerMetric;
 
     public CommentControllerImpl(CommentControllerMetric commentControllerMetric) {
@@ -42,10 +46,7 @@ public class CommentControllerImpl implements CommentController {
     @Override
     @PostMapping
     public CommentFullDto addComment(@RequestBody AddCommentDto addCommentDto, @RequestHeader("Authorization") String token) {
-
-        //TODO
         UserCredentials user = validationService.decodeToken(token);
-
         try {
             CommentFullDto commentFullDto = CommentFullDto.fullCommentBuilder()
                     .id(UUID.randomUUID().toString())
@@ -71,11 +72,8 @@ public class CommentControllerImpl implements CommentController {
     @Override
     @DeleteMapping
     public SuccessResponseDto removeComment(@RequestBody RemoveCommentDto remCommentDto, @RequestHeader("Authorization") String token) {
-        UserCredentials user = validationService.decodeToken(token);
         try {
-            if (!repository.getCommentById(UUID.fromString(remCommentDto.getTopicId()), UUID.fromString(remCommentDto.getCommentId())).getAuthor().equals(user.getEmail())) {
-                throw new ResponseStatusException(HttpStatus.CONFLICT, "Wrong owner of comment with id " + remCommentDto.getCommentId());
-            }
+            ownerValidator.commentOwnerValidator(remCommentDto.getTopicId(), remCommentDto.getCommentId(), token);
             repository.removeComment(UUID.fromString(remCommentDto.getTopicId()), UUID.fromString(remCommentDto.getCommentId()));
             commentControllerMetric.handleRemoveComment();
             return new SuccessResponseDto("Comment was " + remCommentDto.getCommentId() + "  successful removed");
@@ -95,11 +93,8 @@ public class CommentControllerImpl implements CommentController {
     @Override
     @PutMapping
     public SuccessResponseDto updateComment(@RequestBody UpdateCommentDto updCommentDto, @RequestHeader("Authorization") String token) {
-        UserCredentials user = validationService.decodeToken(token);
         try {
-            if (!updCommentDto.getAuthor().equals(user.getEmail())) {
-                throw new ResponseStatusException(HttpStatus.CONFLICT, "Wrong owner of comment with id " + updCommentDto.getId());
-            }
+            ownerValidator.commentOwnerValidator(updCommentDto.getTopicId(), updCommentDto.getId(), token);
             repository.updateComment(UUID.fromString(updCommentDto.getTopicId()), map(updCommentDto));
             commentControllerMetric.handleUpdateComment();
             return new SuccessResponseDto("Comment with id: "+ updCommentDto.getTopicId() + " was updated");

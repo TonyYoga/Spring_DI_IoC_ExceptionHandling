@@ -1,5 +1,6 @@
 package com.telran.springdiiocexceptionhandling.controllers;
 
+import com.telran.springdiiocexceptionhandling.service.exception.ServiceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -16,4 +17,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(msg, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(value = ServiceException.class)
+    public ResponseEntity<?> handleServiceException(RuntimeException ex, WebRequest request) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
+    @ExceptionHandler(value = Exception.class)
+    public ResponseEntity<?> handleOtherException(RuntimeException ex, WebRequest request) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
