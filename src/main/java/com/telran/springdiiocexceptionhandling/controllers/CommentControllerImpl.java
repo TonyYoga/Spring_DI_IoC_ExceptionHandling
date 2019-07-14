@@ -73,7 +73,8 @@ public class CommentControllerImpl implements CommentController {
     @DeleteMapping
     public SuccessResponseDto removeComment(@RequestBody RemoveCommentDto remCommentDto, @RequestHeader("Authorization") String token) {
         try {
-            ownerValidator.commentOwnerValidator(remCommentDto.getTopicId(), remCommentDto.getCommentId(), token);
+            UserCredentials user = validationService.decodeToken(token);
+            ownerValidator.commentOwnerValidator(remCommentDto.getTopicId(), remCommentDto.getCommentId(), user.getEmail());
             repository.removeComment(UUID.fromString(remCommentDto.getTopicId()), UUID.fromString(remCommentDto.getCommentId()));
             commentControllerMetric.handleRemoveComment();
             return new SuccessResponseDto("Comment was " + remCommentDto.getCommentId() + "  successful removed");
@@ -94,7 +95,8 @@ public class CommentControllerImpl implements CommentController {
     @PutMapping
     public SuccessResponseDto updateComment(@RequestBody UpdateCommentDto updCommentDto, @RequestHeader("Authorization") String token) {
         try {
-            ownerValidator.commentOwnerValidator(updCommentDto.getTopicId(), updCommentDto.getId(), token);
+            UserCredentials user = validationService.decodeToken(token);
+            ownerValidator.commentOwnerValidator(updCommentDto.getTopicId(), updCommentDto.getId(), user.getEmail());
             repository.updateComment(UUID.fromString(updCommentDto.getTopicId()), map(updCommentDto));
             commentControllerMetric.handleUpdateComment();
             return new SuccessResponseDto("Comment with id: "+ updCommentDto.getTopicId() + " was updated");

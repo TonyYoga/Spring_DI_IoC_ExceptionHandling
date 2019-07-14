@@ -93,7 +93,8 @@ public class TopicControllerImpl implements TopicController {
     @DeleteMapping("{id}")
     public SuccessResponseDto removeById(@PathVariable("id") String id, @RequestHeader("Authorization") String token) {
         try {
-            ownerValidator.topicOwnerValidator(id, token);
+            UserCredentials user = validationService.decodeToken(token);
+            ownerValidator.topicOwnerValidator(id, user.getEmail());
             controllerMetric.handleRemoveTopic();
             repository.removeTopic(UUID.fromString(id));
             return new SuccessResponseDto("Topic with id: " + id + " was removed");

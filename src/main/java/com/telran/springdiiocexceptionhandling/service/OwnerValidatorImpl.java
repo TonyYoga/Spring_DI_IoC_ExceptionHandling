@@ -12,24 +12,22 @@ import java.util.UUID;
 public class OwnerValidatorImpl implements OwnerValidator {
     @Autowired
     TopicRepository repository;
-    @Autowired
-    TokenService tokenService;
+
     @Override
-    public boolean topicOwnerValidator(String topicId, String token) {
-        UserCredentials user = tokenService.decodeToken(token);
-        if (!repository.getTopicById(UUID.fromString(topicId)).getAuthor().equals(user.getEmail())) {
-            throw new SecurityException("Wrong topic owner" + user.getEmail());
+    public boolean topicOwnerValidator(String topicId, String owner) {
+
+        if (!repository.getTopicById(UUID.fromString(topicId)).getAuthor().equals(owner)) {
+            throw new SecurityException("Wrong topic owner" + owner);
         }
         return true;
     }
 
     @Override
-    public boolean commentOwnerValidator(String topicId, String commentId, String token) {
+    public boolean commentOwnerValidator(String topicId, String commentId, String owner) {
         try {
             CommentEntity entity = repository.getCommentById(UUID.fromString(topicId), UUID.fromString(commentId));
-            UserCredentials user = tokenService.decodeToken(token);
-            if (entity.getAuthor() != user.getEmail()) {
-                throw new SecurityException("Wrong comment owner" + user.getEmail());
+            if (entity.getAuthor() != owner) {
+                throw new SecurityException("Wrong comment owner" + owner);
             }
             return true;
         } catch (IllegalIdException ex) {
