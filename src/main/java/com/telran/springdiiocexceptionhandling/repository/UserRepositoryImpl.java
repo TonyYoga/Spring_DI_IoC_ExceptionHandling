@@ -18,10 +18,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Repository
 public class UserRepositoryImpl implements UserRepository{
     private ConcurrentHashMap<String, UserEntity> users;
-    private ConcurrentHashMap<RolesEntity.Role, CopyOnWriteArrayList<String>> rolesOnwers;
+    private CopyOnWriteArrayList<RolesEntity> rolesOwners;
 
 //    @Autowired
     private StoreProvider<UserEntity> provider;
+
+    @Autowired
+    @Qualifier("userRolesProvider")
+    private StoreProvider<RolesEntity> userRolesProvider;
 
 
     public UserRepositoryImpl(@Qualifier("userProvider") StoreProvider<UserEntity> provider) {
@@ -29,6 +33,7 @@ public class UserRepositoryImpl implements UserRepository{
 
         this.provider = provider;
         users = new ConcurrentHashMap<>();
+        rolesOwners = new CopyOnWriteArrayList<>();
     }
 
     @Override
@@ -50,11 +55,13 @@ public class UserRepositoryImpl implements UserRepository{
         for (UserEntity user : entities) {
             users.putIfAbsent(user.getEmail(), user);
         }
-//        rolesOnwers.putAll();
+        rolesOwners.addAll(userRolesProvider.loadData());
+
     }
 
     @PreDestroy
     private void storeData() {
         provider.storeData(new ArrayList<UserEntity>(users.values()));
+        userRolesProvider.storeData(rolesOwners);
     }
 }
