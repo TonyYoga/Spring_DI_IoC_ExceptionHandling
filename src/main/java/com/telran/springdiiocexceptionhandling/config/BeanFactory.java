@@ -1,4 +1,4 @@
-package com.telran.springdiiocexceptionhandling;
+package com.telran.springdiiocexceptionhandling.config;
 
 import com.telran.springdiiocexceptionhandling.providers.StoreProvider;
 import com.telran.springdiiocexceptionhandling.providers.StoreProviderImpl;

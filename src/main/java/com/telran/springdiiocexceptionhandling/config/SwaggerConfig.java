@@ -1,4 +1,4 @@
-package com.telran.springdiiocexceptionhandling;
+package com.telran.springdiiocexceptionhandling.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
