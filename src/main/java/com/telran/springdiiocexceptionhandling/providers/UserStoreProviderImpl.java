@@ -39,12 +39,11 @@ public class UserStoreProviderImpl implements StoreProvider<UserEntity> {
             if (Files.exists(Path.of(fileName))) {
                 return mapper.readValue(Files.newBufferedReader(Path.of(fileName)), new TypeReference<List<UserEntity>>() {
                 });
-            } else {
-                return Collections.emptyList();
             }
         } catch (IOException e) {
             e.printStackTrace();
             throw new StoreProviderException("File System error", e);
         }
+        return Collections.emptyList();
     }
 }

@@ -1,6 +1,7 @@
 package com.telran.springdiiocexceptionhandling.repository;
 
 import com.telran.springdiiocexceptionhandling.providers.StoreProvider;
+import com.telran.springdiiocexceptionhandling.repository.entity.RolesEntity;
 import com.telran.springdiiocexceptionhandling.repository.entity.UserEntity;
 import com.telran.springdiiocexceptionhandling.repository.exception.DuplicateIdException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +13,12 @@ import javax.annotation.PreDestroy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository{
     private ConcurrentHashMap<String, UserEntity> users;
+    private ConcurrentHashMap<RolesEntity.Role, CopyOnWriteArrayList<String>> rolesOnwers;
 
 //    @Autowired
     private StoreProvider<UserEntity> provider;
@@ -47,6 +50,7 @@ public class UserRepositoryImpl implements UserRepository{
         for (UserEntity user : entities) {
             users.putIfAbsent(user.getEmail(), user);
         }
+//        rolesOnwers.putAll();
     }
 
     @PreDestroy
