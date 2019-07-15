@@ -2,21 +2,25 @@ package com.telran.springdiiocexceptionhandling.config;
 
 import com.telran.springdiiocexceptionhandling.repository.UserRepository;
 import com.telran.springdiiocexceptionhandling.repository.entity.UserEntity;
-import com.telran.springdiiocexceptionhandling.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.security.Principal;
+
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(jsr250Enabled = true)
 public class SecurityConfig {
 
     @Autowired
@@ -48,7 +52,7 @@ public class SecurityConfig {
                 return User.builder()
                         .username(userEntity.getName())
                         .password(passwordEncoder().encode(userEntity.getPassword()))
-                        .roles(userRepository.getRoles(email).stream().toString())
+                        .roles(userRepository.getRoles(email).toString()) //TODO need to check
                         .build();
             });
         }
@@ -60,4 +64,5 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 }

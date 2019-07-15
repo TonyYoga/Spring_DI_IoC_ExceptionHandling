@@ -6,10 +6,14 @@ import com.telran.springdiiocexceptionhandling.controllers.dto.TopicFullDto;
 import com.telran.springdiiocexceptionhandling.controllers.dto.TopicResponseDto;
 import com.telran.springdiiocexceptionhandling.repository.TopicRepository;
 import com.telran.springdiiocexceptionhandling.repository.entity.CommentEntity;
+import com.telran.springdiiocexceptionhandling.repository.entity.RolesEntity;
 import com.telran.springdiiocexceptionhandling.repository.entity.TopicEntity;
+import com.telran.springdiiocexceptionhandling.repository.exception.IllegalIdException;
 import com.telran.springdiiocexceptionhandling.repository.exception.RepositoryException;
 import com.telran.springdiiocexceptionhandling.service.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.security.Principal;
@@ -45,8 +49,20 @@ public class TopicServiceImpl implements TopicService {
     public void removeById(String id) {
         Principal principal = SecurityContextHolder.getContext().getAuthentication();
         String userEmail = principal.getName();
-
-        //TODO
+        //TODO need to check roles
+        try {
+            if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains("ROLE_"+ RolesEntity.Role.ADMIN)) {
+                topicRepository.removeTopic(UUID.fromString(id));
+                return;
+            }
+            if (validator.topicOwnerValidator(id, userEmail)) {
+                topicRepository.removeTopic(UUID.fromString(id));
+            }
+        } catch (IllegalIdException ex) {
+            throw new ServiceException(ex.getMessage(), ex);
+        } catch (RepositoryException ex) {
+            throw new RepositoryException(ex.getMessage(), ex);
+        }
 
     }
 

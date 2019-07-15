@@ -58,9 +58,9 @@ public class UserRepositoryImpl implements UserRepository{
     }
 
     @Override
-    public List<RolesEntity.Role> getRoles(String email) {
+    public RolesEntity.Role[] getRoles(String email) {
         RolesEntity res = rolesOwners.stream().filter(rolesEntity -> rolesEntity.getEmail().equals(email)).findAny().orElseThrow();
-        return res.getRoles();
+        return res.getRoles().toArray(new RolesEntity.Role[0]);
     }
 
     @PostConstruct
