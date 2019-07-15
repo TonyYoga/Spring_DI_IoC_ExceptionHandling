@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 
 import java.security.Principal;
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+@Service
 public class TopicServiceImpl implements TopicService {
     @Autowired
     TopicRepository topicRepository;
@@ -58,10 +60,8 @@ public class TopicServiceImpl implements TopicService {
             if (validator.topicOwnerValidator(id, userEmail)) {
                 topicRepository.removeTopic(UUID.fromString(id));
             }
-        } catch (IllegalIdException ex) {
-            throw new ServiceException(ex.getMessage(), ex);
         } catch (RepositoryException ex) {
-            throw new RepositoryException(ex.getMessage(), ex);
+            throw new ServiceException(ex.getMessage(), ex);
         }
 
     }

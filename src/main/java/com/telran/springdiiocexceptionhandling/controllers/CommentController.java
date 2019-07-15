@@ -3,9 +3,9 @@ package com.telran.springdiiocexceptionhandling.controllers;
 import com.telran.springdiiocexceptionhandling.controllers.dto.*;
 
 public interface CommentController {
-    CommentFullDto addComment(AddCommentDto addCommentDto, String token);
+    CommentFullDto addComment(AddCommentDto addCommentDto);
 
-    SuccessResponseDto removeComment(RemoveCommentDto remCommentDto, String token);
+    SuccessResponseDto removeComment(RemoveCommentDto remCommentDto);
 
-    SuccessResponseDto updateComment(UpdateCommentDto updCommentDto, String token);
+    SuccessResponseDto updateComment(UpdateCommentDto updCommentDto);
 }

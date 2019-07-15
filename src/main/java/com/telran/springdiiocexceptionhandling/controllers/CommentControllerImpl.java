@@ -2,17 +2,14 @@ package com.telran.springdiiocexceptionhandling.controllers;
 
 import com.telran.springdiiocexceptionhandling.controllers.dto.*;
 import com.telran.springdiiocexceptionhandling.monitoring.CommentControllerMetric;
-import com.telran.springdiiocexceptionhandling.repository.TopicRepository;
-import com.telran.springdiiocexceptionhandling.repository.entity.CommentEntity;
-import com.telran.springdiiocexceptionhandling.repository.exception.*;
-import com.telran.springdiiocexceptionhandling.service.OwnerValidator;
-import com.telran.springdiiocexceptionhandling.service.TokenService;
-import com.telran.springdiiocexceptionhandling.service.UserCredentials;
+import com.telran.springdiiocexceptionhandling.service.CommentService;
+import com.telran.springdiiocexceptionhandling.service.exception.ServiceException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -22,14 +19,9 @@ import java.util.UUID;
 @RestController
 @RequestMapping("comment")
 public class CommentControllerImpl implements CommentController {
-    @Autowired
-    TopicRepository repository;
 
     @Autowired
-    TokenService validationService;
-
-    @Autowired
-    OwnerValidator ownerValidator;
+    CommentService commentService;
 
     CommentControllerMetric commentControllerMetric;
 
@@ -45,19 +37,19 @@ public class CommentControllerImpl implements CommentController {
     )
     @Override
     @PostMapping
-    public CommentFullDto addComment(@RequestBody AddCommentDto addCommentDto, @RequestHeader("Authorization") String token) {
-        UserCredentials user = validationService.decodeToken(token);
+    public CommentFullDto addComment(@RequestBody AddCommentDto addCommentDto) {
+        String owner = SecurityContextHolder.getContext().getAuthentication().getName();
         try {
             CommentFullDto commentFullDto = CommentFullDto.fullCommentBuilder()
                     .id(UUID.randomUUID().toString())
-                    .author(user.getEmail())
+                    .author(owner)
                     .message(addCommentDto.getMessage())
                     .date(LocalDateTime.now())
                     .build();
-            repository.addComment(UUID.fromString(addCommentDto.getTopicId()), map(commentFullDto));
+            commentService.addComment(commentFullDto);
             commentControllerMetric.handleAddComment();
             return commentFullDto;
-        } catch (IllegalIdException ex) {
+        } catch (ServiceException ex) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage());
         }
     }
@@ -71,14 +63,12 @@ public class CommentControllerImpl implements CommentController {
     )
     @Override
     @DeleteMapping
-    public SuccessResponseDto removeComment(@RequestBody RemoveCommentDto remCommentDto, @RequestHeader("Authorization") String token) {
+    public SuccessResponseDto removeComment(@RequestBody RemoveCommentDto remCommentDto) {
         try {
-            UserCredentials user = validationService.decodeToken(token);
-            ownerValidator.commentOwnerValidator(remCommentDto.getTopicId(), remCommentDto.getCommentId(), user.getEmail());
-            repository.removeComment(UUID.fromString(remCommentDto.getTopicId()), UUID.fromString(remCommentDto.getCommentId()));
+            commentService.removeComment(remCommentDto);
             commentControllerMetric.handleRemoveComment();
             return new SuccessResponseDto("Comment was " + remCommentDto.getCommentId() + "  successful removed");
-        } catch (IllegalIdException ex) {
+        } catch (ServiceException ex) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage());
         }
 
@@ -93,24 +83,14 @@ public class CommentControllerImpl implements CommentController {
     )
     @Override
     @PutMapping
-    public SuccessResponseDto updateComment(@RequestBody UpdateCommentDto updCommentDto, @RequestHeader("Authorization") String token) {
+    public SuccessResponseDto updateComment(@RequestBody UpdateCommentDto updCommentDto) {
         try {
-            UserCredentials user = validationService.decodeToken(token);
-            ownerValidator.commentOwnerValidator(updCommentDto.getTopicId(), updCommentDto.getId(), user.getEmail());
-            repository.updateComment(UUID.fromString(updCommentDto.getTopicId()), map(updCommentDto));
+            commentService.updateComment(updCommentDto);
             commentControllerMetric.handleUpdateComment();
             return new SuccessResponseDto("Comment with id: "+ updCommentDto.getTopicId() + " was updated");
-        } catch (RepositoryException ex) {
+        } catch (ServiceException ex) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage());
         }
 
     }
-
-    private CommentEntity map(CommentFullDto comment) {
-        return new CommentEntity(UUID.fromString(comment.getId()),
-                comment.getAuthor(),
-                comment.getMessage(),
-                comment.getDate());
-    }
-
 }

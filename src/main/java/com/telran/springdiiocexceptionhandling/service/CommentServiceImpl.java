@@ -9,9 +9,11 @@ import com.telran.springdiiocexceptionhandling.repository.exception.RepositoryEx
 import com.telran.springdiiocexceptionhandling.service.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
+@Service
 public class CommentServiceImpl implements CommentService {
     @Autowired
     TopicRepository repository;
