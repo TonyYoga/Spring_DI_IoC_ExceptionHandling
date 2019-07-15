@@ -46,7 +46,7 @@ public class CommentControllerImpl implements CommentController {
                     .message(addCommentDto.getMessage())
                     .date(LocalDateTime.now())
                     .build();
-            commentService.addComment(commentFullDto);
+            commentService.addComment(addCommentDto.getTopicId(), commentFullDto);
             commentControllerMetric.handleAddComment();
             return commentFullDto;
         } catch (ServiceException ex) {

@@ -16,11 +16,11 @@ import java.time.LocalDateTime;
 @ApiModel(value = "CommentFullDto",description = "Full Comment data transfer object extends CommentDto")
 
 public class CommentFullDto extends CommentDto{
+
     @ApiModelProperty(notes = "Id of comment")
-
     private String id;
-    @ApiModelProperty(notes = "Date and time of comment")
 
+    @ApiModelProperty(notes = "Date and time of comment")
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime date;
 

@@ -33,14 +33,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<RolesEntity.Role> getUserRoles(String userEmail) {
+    public List<String> getUserRoles(String userEmail) {
         return Arrays.stream(userRepository.getRoles(userEmail)).collect(Collectors.toList());
     }
 
     private UserEntity map(UserDto userDto) {
         return UserEntity.builder()
                 .email(userDto.getEmail())
-                .password(userDto.getPassword())
+                .password(securityConfig.passwordEncoder().encode(userDto.getPassword()))
                 .name(userDto.getName())
                 .city(userDto.getCity())
                 .phone(userDto.getPhone())

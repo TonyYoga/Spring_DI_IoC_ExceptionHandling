@@ -43,7 +43,7 @@ public class UserRepositoryImpl implements UserRepository{
             List<RolesEntity.Role> roles = new ArrayList<>();
             RolesEntity.Role currentRole = RolesEntity.Role.USER;
             if (rolesOwners.isEmpty()) {
-                currentRole = RolesEntity.Role.ADMIN;
+                roles.add(RolesEntity.Role.ADMIN);
             }
             roles.add(currentRole);
             rolesOwners.add(new RolesEntity(userEntity.getEmail(), roles));
@@ -58,9 +58,9 @@ public class UserRepositoryImpl implements UserRepository{
     }
 
     @Override
-    public RolesEntity.Role[] getRoles(String email) {
+    public String[] getRoles(String email) {
         RolesEntity res = rolesOwners.stream().filter(rolesEntity -> rolesEntity.getEmail().equals(email)).findAny().orElseThrow();
-        return res.getRoles().toArray(new RolesEntity.Role[0]);
+        return res.getRoles().stream().map(role -> role.name()).toArray(String[]::new);
     }
 
     @PostConstruct

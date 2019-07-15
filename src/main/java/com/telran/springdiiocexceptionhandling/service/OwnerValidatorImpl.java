@@ -6,11 +6,8 @@ import com.telran.springdiiocexceptionhandling.repository.entity.RolesEntity;
 import com.telran.springdiiocexceptionhandling.repository.exception.IllegalIdException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
-import java.security.Principal;
 import java.util.UUID;
 
 @Component
@@ -42,7 +39,10 @@ public class OwnerValidatorImpl implements OwnerValidator {
 
     @Override
     public boolean isAdminRole() {
-        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains("ROLE_" + RolesEntity.Role.ADMIN);
+        SecurityContextHolder.getContext().getAuthentication().getAuthorities().forEach(System.out::println);
+        System.out.println("ROLE_" + RolesEntity.Role.ADMIN.name());
+        boolean res = SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains("ROLE_" + RolesEntity.Role.ADMIN.name());
+        return res;
 
     }
 }

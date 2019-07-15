@@ -22,9 +22,9 @@ public class CommentServiceImpl implements CommentService {
     OwnerValidator ownerValidator;
 
     @Override
-    public void addComment(CommentFullDto commentFullDto) {
+    public void addComment(String topicId, CommentFullDto commentFullDto) {
         try {
-            repository.addComment(UUID.fromString(commentFullDto.getId()), map(commentFullDto));
+            repository.addComment(UUID.fromString(topicId), map(commentFullDto));
         } catch (RepositoryException ex) {
             throw new ServiceException(ex.getMessage(), ex);
         }

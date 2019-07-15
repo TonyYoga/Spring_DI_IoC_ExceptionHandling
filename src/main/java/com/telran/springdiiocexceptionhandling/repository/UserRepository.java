@@ -12,5 +12,5 @@ public interface UserRepository {
 
     UserEntity getUserByEmail(String email);
 
-    RolesEntity.Role[] getRoles(String email);
+    String[] getRoles(String email);
 }

@@ -1,7 +1,6 @@
 package com.telran.springdiiocexceptionhandling.controllers;
 
 import com.telran.springdiiocexceptionhandling.controllers.dto.SuccessResponseDto;
-import com.telran.springdiiocexceptionhandling.controllers.dto.TopicResponseDto;
 import com.telran.springdiiocexceptionhandling.controllers.dto.UserDto;
 import com.telran.springdiiocexceptionhandling.service.UserService;
 import com.telran.springdiiocexceptionhandling.service.exception.ServiceException;

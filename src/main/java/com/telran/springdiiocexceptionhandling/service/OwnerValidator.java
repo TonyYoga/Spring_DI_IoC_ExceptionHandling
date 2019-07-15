@@ -1,7 +1,5 @@
 package com.telran.springdiiocexceptionhandling.service;
 
-import java.security.Principal;
-
 public interface OwnerValidator {
 
     boolean topicOwnerValidator(String topicId, String ownerEmail);

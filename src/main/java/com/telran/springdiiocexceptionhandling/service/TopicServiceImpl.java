@@ -33,6 +33,7 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public void addTopic(TopicResponseDto topicResponseDto) {
+        System.out.println("add topic service ->>>");
         try {
             topicRepository.addTopic(map(topicResponseDto));
         } catch (RepositoryException ex) {
@@ -53,7 +54,7 @@ public class TopicServiceImpl implements TopicService {
         String userEmail = principal.getName();
         //TODO need to check roles
         try {
-            if (SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains("ROLE_"+ RolesEntity.Role.ADMIN)) {
+            if (validator.isAdminRole()) {
                 topicRepository.removeTopic(UUID.fromString(id));
                 return;
             }

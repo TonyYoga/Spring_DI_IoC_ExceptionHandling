@@ -11,6 +11,7 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -40,7 +41,10 @@ public class TopicControllerImpl implements TopicController {
     @Override
     @PostMapping
     public TopicResponseDto addTopic(@RequestBody TopicDto topicDto) {
-        String owner = SecurityContextHolder.getContext().getAuthentication().getName();
+        System.out.println("add topic controller ->>>");
+        String owner = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+
+        System.out.println(owner);
         TopicResponseDto res = TopicResponseDto.topicResponseBuilder()
                 .id(UUID.randomUUID().toString())
                 .author(owner)

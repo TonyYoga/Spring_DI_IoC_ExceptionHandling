@@ -7,7 +7,7 @@ import com.telran.springdiiocexceptionhandling.controllers.dto.TopicResponseDto;
 
 public interface TopicService {
 
-    @RoleAdmin
+//    @RoleAdmin
     @RoleUser
     void addTopic(TopicResponseDto topicResponseDto);
 

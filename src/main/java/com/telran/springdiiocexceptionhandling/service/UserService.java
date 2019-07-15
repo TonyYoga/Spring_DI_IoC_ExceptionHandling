@@ -13,6 +13,6 @@ public interface UserService {
 
     boolean addUser(UserDto userDto);
 
-    List<RolesEntity.Role> getUserRoles(String userEmail);
+    List<String> getUserRoles(String userEmail);
 
 }

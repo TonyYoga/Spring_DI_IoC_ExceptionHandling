@@ -6,9 +6,8 @@ import com.telran.springdiiocexceptionhandling.controllers.dto.*;
 
 public interface CommentService {
 
-    @RoleAdmin
     @RoleUser
-    void addComment(CommentFullDto commentFullDto);
+    void addComment(String topicId, CommentFullDto commentFullDto);
 
     @RoleAdmin
     @RoleUser

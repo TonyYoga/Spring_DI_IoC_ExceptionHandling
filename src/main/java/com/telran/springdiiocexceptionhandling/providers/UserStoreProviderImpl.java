@@ -19,7 +19,7 @@ public class UserStoreProviderImpl implements StoreProvider<UserEntity> {
     @Autowired
     ObjectMapper mapper;
 
-    @Value("${dbUsers}")
+    @Value("dbUsers")
     private String fileName;
 
 

@@ -20,7 +20,7 @@ public class StoreProviderImpl implements StoreProvider<TopicEntity> {
     @Autowired
     ObjectMapper mapper;
 
-    @Value("${dbFileName}")
+    @Value("dbTopics")
     private String fileName;
 
     @Override
