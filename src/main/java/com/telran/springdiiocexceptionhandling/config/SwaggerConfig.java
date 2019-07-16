@@ -29,7 +29,7 @@ public class SwaggerConfig {
     private ApiInfo apiEndPointsInfo() {
         return new ApiInfoBuilder().title("Spring ")
                 .description("Demo Forum")
-                .contact(new Contact("Konkin Anton", "https://tel-ran.com", "konkin.anton@gmail.com"))
+                .contact(new Contact("Konkin Anton", "https://www.linkedin.com/in/anton-konkin/", "konkin.anton@gmail.com"))
                 .license("Apache 2.0")
                 .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
                 .version("1.0.0")

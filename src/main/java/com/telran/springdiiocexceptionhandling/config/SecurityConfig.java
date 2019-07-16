@@ -37,15 +37,15 @@ public class SecurityConfig {
         @Override
         protected void configure(HttpSecurity http) throws Exception {
 
-            http.csrf().disable()
-                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
                     .authorizeRequests()
+//                    .antMatchers("/v2/api-docs", "/swagger-resources/configuration/ui", "/swagger-resources", "/swagger-resources/configuration/security", "/swagger-ui.html", "/webjars/**").permitAll()
                     .antMatchers("/admin/**").hasRole(RolesEntity.Role.ADMIN.name())
                     .antMatchers(HttpMethod.GET, "/topic").permitAll()
                     .antMatchers("/topic/**","/comment/**").hasRole(RolesEntity.Role.USER.name())
                     .antMatchers(HttpMethod.POST,"/user").permitAll()
-                    .anyRequest().authenticated()
+                    .anyRequest().permitAll()
                     .and()
                     .httpBasic();
         }
