@@ -53,7 +53,6 @@ public class SecurityConfig {
 
         @Override
         protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//            System.out.println("Ooops------------------------->");
             auth.userDetailsService(email -> {
                 UserEntity userEntity = userRepository.getUserByEmail(email);
                 if (userEntity == null) {
@@ -63,10 +62,7 @@ public class SecurityConfig {
                 return User.builder()
                         .username(userEntity.getEmail())
                         .password(userEntity.getPassword())
-//                        .roles("USER","ADMIN")
-                        .roles(roles) //TODO need to check
-//                        .roles(Arrays.stream(userRepository.getRoles(email)))
-//                        .authorities(AuthorityUtils.)
+                        .roles(roles)
                         .build();
             }).passwordEncoder(passwordEncoder());
         }
