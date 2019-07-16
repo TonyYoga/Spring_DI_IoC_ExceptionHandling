@@ -15,7 +15,7 @@
     <description>HomeTask #62 Spring Di/IoC and Exception Handling</description>
 
     <properties>
-        <java.version>8</java.version>
+        <java.version>12</java.version>
     </properties>
 
     <dependencies>
