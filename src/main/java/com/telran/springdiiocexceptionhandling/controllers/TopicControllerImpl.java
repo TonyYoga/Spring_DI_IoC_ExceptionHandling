@@ -26,6 +26,9 @@ public class TopicControllerImpl implements TopicController {
     @Autowired
     TopicService topicService;
 
+    @Autowired
+    OwnerValidator validator;
+
     private TopicControllerMetric controllerMetric;
 
     public TopicControllerImpl(TopicControllerMetric controllerMetric) {
@@ -43,8 +46,6 @@ public class TopicControllerImpl implements TopicController {
     public TopicResponseDto addTopic(@RequestBody TopicDto topicDto) {
         System.out.println("add topic controller ->>>");
         String owner = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-
-        System.out.println(owner);
         TopicResponseDto res = TopicResponseDto.topicResponseBuilder()
                 .id(UUID.randomUUID().toString())
                 .author(owner)
@@ -54,6 +55,7 @@ public class TopicControllerImpl implements TopicController {
                 .build();
         try {
             topicService.addTopic(res);
+
             controllerMetric.handleAddTopic();
         } catch (ServiceException ex) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage());
@@ -84,10 +86,13 @@ public class TopicControllerImpl implements TopicController {
     public SuccessResponseDto removeById(@PathVariable("id") String id) {
         try {
             controllerMetric.handleRemoveTopic();
+            validator.topicOwnerValidator(id, SecurityContextHolder.getContext().getAuthentication().getName());
             topicService.removeById(id);
             return new SuccessResponseDto("Topic with id: " + id + " was removed");
         } catch (ServiceException ex) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Topic with id: " + id + " wasn't removed");
+        } catch (SecurityException ex) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, ex.getMessage());
         }
 
 

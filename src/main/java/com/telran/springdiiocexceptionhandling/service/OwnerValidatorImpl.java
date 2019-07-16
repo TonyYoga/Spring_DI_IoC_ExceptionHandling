@@ -2,16 +2,11 @@ package com.telran.springdiiocexceptionhandling.service;
 
 import com.telran.springdiiocexceptionhandling.repository.TopicRepository;
 import com.telran.springdiiocexceptionhandling.repository.entity.CommentEntity;
-import com.telran.springdiiocexceptionhandling.repository.entity.RolesEntity;
 import com.telran.springdiiocexceptionhandling.repository.exception.IllegalIdException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Component
 public class OwnerValidatorImpl implements OwnerValidator {
@@ -40,17 +35,4 @@ public class OwnerValidatorImpl implements OwnerValidator {
         }
     }
 
-    @Override
-    public boolean isAdminRole() {
-        //TODO check bad code style!
-//        SecurityContextHolder.getContext().getAuthentication().getAuthorities().forEach(System.out::println);
-//        System.out.println("ROLE_" + RolesEntity.Role.ADMIN.name());
-        boolean res = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
-                .map(a -> ((GrantedAuthority) a).getAuthority())
-                .collect(Collectors.toList()).contains("ROLE_" + RolesEntity.Role.ADMIN.name());
-
-//        boolean res = SecurityContextHolder.getContext().getAuthentication().getAuthorities().contains("ROLE_" + RolesEntity.Role.ADMIN.name());
-        return res;
-
-    }
 }

@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 public class RolesEntity {
 
-    public static enum Role {
+    public enum Role {
         USER, ADMIN
     }
 

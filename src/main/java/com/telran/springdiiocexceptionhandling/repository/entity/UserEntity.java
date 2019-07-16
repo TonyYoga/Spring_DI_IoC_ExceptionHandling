@@ -2,7 +2,6 @@ package com.telran.springdiiocexceptionhandling.repository.entity;
 
 import lombok.*;
 
-import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

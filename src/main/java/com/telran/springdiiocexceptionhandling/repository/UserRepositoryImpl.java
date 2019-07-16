@@ -4,7 +4,6 @@ import com.telran.springdiiocexceptionhandling.providers.StoreProvider;
 import com.telran.springdiiocexceptionhandling.repository.entity.RolesEntity;
 import com.telran.springdiiocexceptionhandling.repository.entity.UserEntity;
 import com.telran.springdiiocexceptionhandling.repository.exception.DuplicateIdException;
-import com.telran.springdiiocexceptionhandling.repository.exception.RepositoryException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
@@ -21,7 +20,6 @@ public class UserRepositoryImpl implements UserRepository{
     private ConcurrentHashMap<String, UserEntity> users;
     private CopyOnWriteArrayList<RolesEntity> rolesOwners;
 
-//    @Autowired
     private StoreProvider<UserEntity> provider;
 
     @Autowired
@@ -30,8 +28,6 @@ public class UserRepositoryImpl implements UserRepository{
 
 
     public UserRepositoryImpl(@Qualifier("userProvider") StoreProvider<UserEntity> provider) {
-        System.out.println(">>>User provider");
-
         this.provider = provider;
         users = new ConcurrentHashMap<>();
         rolesOwners = new CopyOnWriteArrayList<>();

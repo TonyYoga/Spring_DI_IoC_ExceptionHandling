@@ -27,7 +27,6 @@ import java.security.Principal;
 import java.util.Arrays;
 
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(jsr250Enabled = true)
 public class SecurityConfig {
 
     @Autowired
@@ -42,11 +41,11 @@ public class SecurityConfig {
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
                     .authorizeRequests()
-                    .antMatchers(HttpMethod.POST, "/topic").authenticated()
-                    .antMatchers(HttpMethod.DELETE,"/topic**").authenticated()
-                    .antMatchers("/comment").authenticated()
-                    .antMatchers("/user").permitAll()
-                    .anyRequest().permitAll()
+                    .antMatchers("/admin/**").hasRole(RolesEntity.Role.ADMIN.name())
+                    .antMatchers(HttpMethod.GET, "/topic").permitAll()
+                    .antMatchers("/topic/**","/comment/**").hasRole(RolesEntity.Role.USER.name())
+                    .antMatchers(HttpMethod.POST,"/user").permitAll()
+                    .anyRequest().authenticated()
                     .and()
                     .httpBasic();
         }
@@ -67,8 +66,6 @@ public class SecurityConfig {
             }).passwordEncoder(passwordEncoder());
         }
     }
-
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {

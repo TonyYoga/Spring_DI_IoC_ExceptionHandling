@@ -3,6 +3,7 @@ package com.telran.springdiiocexceptionhandling.controllers;
 import com.telran.springdiiocexceptionhandling.controllers.dto.*;
 import com.telran.springdiiocexceptionhandling.monitoring.CommentControllerMetric;
 import com.telran.springdiiocexceptionhandling.service.CommentService;
+import com.telran.springdiiocexceptionhandling.service.OwnerValidator;
 import com.telran.springdiiocexceptionhandling.service.exception.ServiceException;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -22,6 +23,9 @@ public class CommentControllerImpl implements CommentController {
 
     @Autowired
     CommentService commentService;
+
+    @Autowired
+    OwnerValidator validator;
 
     CommentControllerMetric commentControllerMetric;
 
@@ -64,12 +68,16 @@ public class CommentControllerImpl implements CommentController {
     @Override
     @DeleteMapping
     public SuccessResponseDto removeComment(@RequestBody RemoveCommentDto remCommentDto) {
+        String owner = SecurityContextHolder.getContext().getAuthentication().getName();
         try {
+            validator.commentOwnerValidator(remCommentDto.getTopicId(), remCommentDto.getCommentId(), owner);
             commentService.removeComment(remCommentDto);
             commentControllerMetric.handleRemoveComment();
             return new SuccessResponseDto("Comment was " + remCommentDto.getCommentId() + "  successful removed");
         } catch (ServiceException ex) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage());
+        } catch (SecurityException ex) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, ex.getMessage());
         }
 
     }
@@ -84,13 +92,18 @@ public class CommentControllerImpl implements CommentController {
     @Override
     @PutMapping
     public SuccessResponseDto updateComment(@RequestBody UpdateCommentDto updCommentDto) {
+        String owner = SecurityContextHolder.getContext().getAuthentication().getName();
         try {
+            validator.commentOwnerValidator(updCommentDto.getTopicId(), updCommentDto.getId(), owner);
             commentService.updateComment(updCommentDto);
             commentControllerMetric.handleUpdateComment();
             return new SuccessResponseDto("Comment with id: "+ updCommentDto.getTopicId() + " was updated");
         } catch (ServiceException ex) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage());
+        } catch (SecurityException ex) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, ex.getMessage());
         }
+
 
     }
 }

@@ -3,7 +3,6 @@ package com.telran.springdiiocexceptionhandling.service;
 import com.telran.springdiiocexceptionhandling.config.SecurityConfig;
 import com.telran.springdiiocexceptionhandling.controllers.dto.UserDto;
 import com.telran.springdiiocexceptionhandling.repository.UserRepository;
-import com.telran.springdiiocexceptionhandling.repository.entity.RolesEntity;
 import com.telran.springdiiocexceptionhandling.repository.entity.UserEntity;
 import com.telran.springdiiocexceptionhandling.repository.exception.RepositoryException;
 import com.telran.springdiiocexceptionhandling.service.exception.ServiceException;

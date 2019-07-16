@@ -8,7 +8,6 @@ import com.telran.springdiiocexceptionhandling.repository.entity.CommentEntity;
 import com.telran.springdiiocexceptionhandling.repository.exception.RepositoryException;
 import com.telran.springdiiocexceptionhandling.service.exception.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -17,9 +16,6 @@ import java.util.UUID;
 public class CommentServiceImpl implements CommentService {
     @Autowired
     TopicRepository repository;
-
-    @Autowired
-    OwnerValidator ownerValidator;
 
     @Override
     public void addComment(String topicId, CommentFullDto commentFullDto) {
@@ -32,15 +28,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void removeComment(RemoveCommentDto remCommentDto) {
-        String owner = SecurityContextHolder.getContext().getAuthentication().getName();
         try {
-            if (ownerValidator.isAdminRole()) {
-                repository.removeComment(UUID.fromString(remCommentDto.getTopicId()), UUID.fromString(remCommentDto.getCommentId()));
-                return;
-            }
-            if (ownerValidator.commentOwnerValidator(remCommentDto.getTopicId(), remCommentDto.getCommentId(), owner)) {
-                repository.removeComment(UUID.fromString(remCommentDto.getTopicId()), UUID.fromString(remCommentDto.getCommentId()));
-            }
+            repository.removeComment(UUID.fromString(remCommentDto.getTopicId()), UUID.fromString(remCommentDto.getCommentId()));
         } catch (RepositoryException ex) {
             throw new ServiceException(ex.getMessage(), ex);
         }
@@ -48,14 +37,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void updateComment(UpdateCommentDto updCommentDto) {
-        String owner = SecurityContextHolder.getContext().getAuthentication().getName();
         try {
-            if (ownerValidator.isAdminRole()) {
-                repository.updateComment(UUID.fromString(updCommentDto.getTopicId()), map(updCommentDto));
-                return;
-            }
-            if (ownerValidator.commentOwnerValidator(updCommentDto.getTopicId(), updCommentDto.getId(), owner)) {
-                repository.updateComment(UUID.fromString(updCommentDto.getTopicId()), map(updCommentDto));            }
+            repository.updateComment(UUID.fromString(updCommentDto.getTopicId()), map(updCommentDto));
         } catch (RepositoryException ex) {
             throw new ServiceException(ex.getMessage(), ex);
         }

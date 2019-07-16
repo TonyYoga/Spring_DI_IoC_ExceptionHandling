@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 @Repository
 public class TopicRepositoryImpl implements TopicRepository {
 
-//    @Autowired
     private StoreProvider<TopicEntity> provider;
 
     private final Lock readLock;
@@ -32,7 +31,6 @@ public class TopicRepositoryImpl implements TopicRepository {
     private ConcurrentHashMap<UUID, CopyOnWriteArrayList<CommentEntity>> comments;
 
     public TopicRepositoryImpl(@Qualifier("topicProvider") StoreProvider<TopicEntity> provider) {
-        System.out.println(">>>Topic provider");
         this.provider = provider;
         ReadWriteLock lock = new ReentrantReadWriteLock();
         readLock = lock.readLock();
