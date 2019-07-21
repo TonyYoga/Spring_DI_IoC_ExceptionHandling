@@ -44,7 +44,6 @@ public class TopicControllerImpl implements TopicController {
     @Override
     @PostMapping
     public TopicResponseDto addTopic(@RequestBody TopicDto topicDto) {
-        System.out.println("add topic controller ->>>");
         String owner = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         TopicResponseDto res = TopicResponseDto.topicResponseBuilder()
                 .id(UUID.randomUUID().toString())
