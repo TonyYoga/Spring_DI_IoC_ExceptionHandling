@@ -18,7 +18,7 @@ public class OwnerValidatorImpl implements OwnerValidator {
     @Override
     public boolean topicOwnerValidator(String topicId, String owner) {
 
-        if (!repository.getTopicById(UUID.fromString(topicId)).getAuthor().equals(owner)) {
+        if (!repository.getTopicById(UUID.fromString(topicId)).getOwner().equals(owner)) {
             throw new SecurityException("Wrong topic owner" + owner);
         }
         return true;
@@ -28,7 +28,7 @@ public class OwnerValidatorImpl implements OwnerValidator {
     public boolean commentOwnerValidator(String topicId, String commentId, String owner) {
         try {
             CommentEntity entity = repository.getCommentById(UUID.fromString(topicId), UUID.fromString(commentId));
-            if (entity.getAuthor().equals(owner)) {
+            if (entity.getOwner().equals(owner)) {
                 throw new SecurityException("Wrong comment owner" + owner);
             }
             return true;

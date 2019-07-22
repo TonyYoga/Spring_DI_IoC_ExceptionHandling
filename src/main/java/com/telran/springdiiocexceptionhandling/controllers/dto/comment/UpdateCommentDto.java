@@ -1,4 +1,4 @@
-package com.telran.springdiiocexceptionhandling.controllers.dto;
+package com.telran.springdiiocexceptionhandling.controllers.dto.comment;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -18,8 +18,8 @@ public class UpdateCommentDto extends CommentFullDto {
     private String topicId;
 
     @Builder(builderMethodName = "updateCommentBuilder")
-    public UpdateCommentDto(String author, String message, String id, LocalDateTime date, String topicId) {
-        super(author, message, id, date);
+    public UpdateCommentDto(String message, String id, String author, String owner , LocalDateTime date, String topicId) {
+        super(message, id, author, owner, date);
         this.topicId = topicId;
     }
 }

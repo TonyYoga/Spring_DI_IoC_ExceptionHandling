@@ -1,9 +1,9 @@
 package com.telran.springdiiocexceptionhandling.controllers;
 
 import com.telran.springdiiocexceptionhandling.controllers.dto.SuccessResponseDto;
-import com.telran.springdiiocexceptionhandling.controllers.dto.TopicFullDto;
-import com.telran.springdiiocexceptionhandling.controllers.dto.TopicDto;
-import com.telran.springdiiocexceptionhandling.controllers.dto.TopicResponseDto;
+import com.telran.springdiiocexceptionhandling.controllers.dto.topic.TopicFullDto;
+import com.telran.springdiiocexceptionhandling.controllers.dto.topic.TopicDto;
+import com.telran.springdiiocexceptionhandling.controllers.dto.topic.TopicResponseDto;
 
 public interface TopicController {
 

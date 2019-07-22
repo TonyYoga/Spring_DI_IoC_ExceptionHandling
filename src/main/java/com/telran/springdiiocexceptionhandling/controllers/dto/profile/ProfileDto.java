@@ -1,4 +1,4 @@
-package com.telran.springdiiocexceptionhandling.controllers.dto;
+package com.telran.springdiiocexceptionhandling.controllers.dto.profile;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;

@@ -1,6 +1,9 @@
 package com.telran.springdiiocexceptionhandling.controllers;
 
 import com.telran.springdiiocexceptionhandling.controllers.dto.*;
+import com.telran.springdiiocexceptionhandling.controllers.dto.topic.TopicDto;
+import com.telran.springdiiocexceptionhandling.controllers.dto.topic.TopicFullDto;
+import com.telran.springdiiocexceptionhandling.controllers.dto.topic.TopicResponseDto;
 import com.telran.springdiiocexceptionhandling.monitoring.TopicControllerMetric;
 import com.telran.springdiiocexceptionhandling.service.OwnerValidator;
 import com.telran.springdiiocexceptionhandling.service.TopicService;
@@ -20,7 +23,6 @@ import java.util.UUID;
 @RestController
 @RequestMapping("topic")
 public class TopicControllerImpl implements TopicController {
-
 
     private TopicService topicService;
 
@@ -46,7 +48,7 @@ public class TopicControllerImpl implements TopicController {
         String owner = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         TopicResponseDto res = TopicResponseDto.topicResponseBuilder()
                 .id(UUID.randomUUID().toString())
-                .author(owner)
+                .owner(owner)
                 .title(topicDto.getTitle())
                 .content(topicDto.getContent())
                 .date(LocalDateTime.now())

@@ -1,6 +1,6 @@
 package com.telran.springdiiocexceptionhandling.service;
 
-import com.telran.springdiiocexceptionhandling.controllers.dto.FullProfileDto;
+import com.telran.springdiiocexceptionhandling.controllers.dto.profile.FullProfileDto;
 import com.telran.springdiiocexceptionhandling.repository.ProfileRepository;
 import com.telran.springdiiocexceptionhandling.repository.entity.ProfileEntity;
 import com.telran.springdiiocexceptionhandling.repository.exception.RepositoryException;
@@ -47,7 +47,6 @@ public class ProfileServiceImpl implements ProfileService{
     }
 
     private ProfileEntity map(FullProfileDto profileDto) {
-        System.out.println(profileDto.getBDay().atStartOfDay());
         return ProfileEntity.builder()
                 .firstName(profileDto.getFirstName())
                 .lastName(profileDto.getLastName())
@@ -57,7 +56,6 @@ public class ProfileServiceImpl implements ProfileService{
     }
 
     private FullProfileDto map(ProfileEntity profile) {
-        System.out.println(profile.getBDay());
         return FullProfileDto.fullProfileDto()
                 .firstName(profile.getFirstName())
                 .lastName(profile.getLastName())

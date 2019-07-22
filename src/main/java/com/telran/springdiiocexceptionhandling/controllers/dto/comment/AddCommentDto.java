@@ -1,4 +1,4 @@
-package com.telran.springdiiocexceptionhandling.controllers.dto;
+package com.telran.springdiiocexceptionhandling.controllers.dto.comment;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

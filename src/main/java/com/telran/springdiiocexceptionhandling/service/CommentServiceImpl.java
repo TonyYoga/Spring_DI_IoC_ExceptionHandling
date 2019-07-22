@@ -1,8 +1,8 @@
 package com.telran.springdiiocexceptionhandling.service;
 
-import com.telran.springdiiocexceptionhandling.controllers.dto.CommentFullDto;
-import com.telran.springdiiocexceptionhandling.controllers.dto.RemoveCommentDto;
-import com.telran.springdiiocexceptionhandling.controllers.dto.UpdateCommentDto;
+import com.telran.springdiiocexceptionhandling.controllers.dto.comment.CommentFullDto;
+import com.telran.springdiiocexceptionhandling.controllers.dto.comment.RemoveCommentDto;
+import com.telran.springdiiocexceptionhandling.controllers.dto.comment.UpdateCommentDto;
 import com.telran.springdiiocexceptionhandling.repository.TopicRepository;
 import com.telran.springdiiocexceptionhandling.repository.entity.CommentEntity;
 import com.telran.springdiiocexceptionhandling.repository.exception.RepositoryException;
@@ -48,7 +48,7 @@ public class CommentServiceImpl implements CommentService {
 
     private CommentEntity map(CommentFullDto comment) {
         return new CommentEntity(UUID.fromString(comment.getId()),
-                comment.getAuthor(),
+                comment.getOwner(),
                 comment.getMessage(),
                 comment.getDate());
     }

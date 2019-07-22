@@ -1,6 +1,6 @@
 package com.telran.springdiiocexceptionhandling.service;
 
-import com.telran.springdiiocexceptionhandling.controllers.dto.FullProfileDto;
+import com.telran.springdiiocexceptionhandling.controllers.dto.profile.FullProfileDto;
 
 public interface ProfileService {
 

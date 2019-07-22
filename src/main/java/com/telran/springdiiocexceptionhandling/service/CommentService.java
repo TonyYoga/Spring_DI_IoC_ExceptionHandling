@@ -1,6 +1,8 @@
 package com.telran.springdiiocexceptionhandling.service;
 
-import com.telran.springdiiocexceptionhandling.controllers.dto.*;
+import com.telran.springdiiocexceptionhandling.controllers.dto.comment.CommentFullDto;
+import com.telran.springdiiocexceptionhandling.controllers.dto.comment.RemoveCommentDto;
+import com.telran.springdiiocexceptionhandling.controllers.dto.comment.UpdateCommentDto;
 
 public interface CommentService {
 

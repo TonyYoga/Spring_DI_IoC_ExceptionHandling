@@ -14,7 +14,7 @@ import java.util.UUID;
 @ToString
 public class TopicEntity {
     private UUID id;
-    private String author;
+    private String owner;
     private String title;
     private String content;
     private LocalDateTime date;

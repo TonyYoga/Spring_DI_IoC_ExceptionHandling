@@ -1,7 +1,7 @@
 package com.telran.springdiiocexceptionhandling.service;
 
-import com.telran.springdiiocexceptionhandling.controllers.dto.TopicFullDto;
-import com.telran.springdiiocexceptionhandling.controllers.dto.TopicResponseDto;
+import com.telran.springdiiocexceptionhandling.controllers.dto.topic.TopicFullDto;
+import com.telran.springdiiocexceptionhandling.controllers.dto.topic.TopicResponseDto;
 
 public interface TopicService {
 

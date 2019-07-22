@@ -1,6 +1,10 @@
 package com.telran.springdiiocexceptionhandling.controllers;
 
 import com.telran.springdiiocexceptionhandling.controllers.dto.*;
+import com.telran.springdiiocexceptionhandling.controllers.dto.comment.AddCommentDto;
+import com.telran.springdiiocexceptionhandling.controllers.dto.comment.CommentFullDto;
+import com.telran.springdiiocexceptionhandling.controllers.dto.comment.RemoveCommentDto;
+import com.telran.springdiiocexceptionhandling.controllers.dto.comment.UpdateCommentDto;
 import com.telran.springdiiocexceptionhandling.monitoring.CommentControllerMetric;
 import com.telran.springdiiocexceptionhandling.service.CommentService;
 import com.telran.springdiiocexceptionhandling.service.OwnerValidator;
@@ -45,7 +49,7 @@ public class CommentControllerImpl implements CommentController {
         try {
             CommentFullDto commentFullDto = CommentFullDto.fullCommentBuilder()
                     .id(UUID.randomUUID().toString())
-                    .author(owner)
+                    .owner(owner)
                     .message(addCommentDto.getMessage())
                     .date(LocalDateTime.now())
                     .build();

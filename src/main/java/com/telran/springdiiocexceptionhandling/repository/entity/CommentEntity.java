@@ -14,7 +14,7 @@ import java.util.UUID;
 
 public class CommentEntity {
     private UUID id;
-    private String author;
+    private String owner;
     private String message;
     private LocalDateTime date;
 }

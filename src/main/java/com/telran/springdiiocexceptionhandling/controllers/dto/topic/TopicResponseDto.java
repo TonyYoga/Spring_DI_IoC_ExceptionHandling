@@ -1,4 +1,4 @@
-package com.telran.springdiiocexceptionhandling.controllers.dto;
+package com.telran.springdiiocexceptionhandling.controllers.dto.topic;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 /*
 {
   "id":"[String]",
-  "author":"[String]",
+  "owner":"[String]",
   "title":"[String]",
   "content":"[String]",
   "date":"[DateTime]"
@@ -27,13 +27,16 @@ import java.time.LocalDateTime;
 public class TopicResponseDto extends TopicDto {
     @ApiModelProperty(notes = "Id of the topic")
     private String id;
+    @ApiModelProperty(notes = "Owner of topic")
+    private String owner;
     @ApiModelProperty(notes = "Topic date and time")
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
     private LocalDateTime date;
 
     @Builder(builderMethodName = "topicResponseBuilder")
-    public TopicResponseDto(String id, String author, String title, String content, LocalDateTime date) {
-        super(author, title, content);
+    public TopicResponseDto(String id, String owner, String title, String content, LocalDateTime date) {
+        super(title, content);
+        this.owner = owner;
         this.id = id;
         this.date = date;
     }

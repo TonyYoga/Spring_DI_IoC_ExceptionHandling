@@ -16,6 +16,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @Repository
 public class UserRepositoryImpl implements UserRepository{
+
     private ConcurrentHashMap<String, UserEntity> users;
     private CopyOnWriteArrayList<RolesEntity> rolesOwners;
 

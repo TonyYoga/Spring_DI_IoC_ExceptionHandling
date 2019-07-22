@@ -1,4 +1,4 @@
-package com.telran.springdiiocexceptionhandling.controllers.dto;
+package com.telran.springdiiocexceptionhandling.controllers.dto.topic;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -11,12 +11,12 @@ import lombok.ToString;
 TOPIC:
 id - String format, server should generate	it
 date - DateTime added, server should put when topic adding, Format: "dd/MM/yyyy hh:mm"
-author - String format, required
+owner - String format, required
 title - String format, required
 content - String format, required
 JSON Example of Topic request
 {
-  "author":"[String]",
+  "owner":"[String]",
   "title":"[String]",
   "content":"[String]"
 }
@@ -29,8 +29,8 @@ JSON Example of Topic request
 @ApiModel(value = "TopicDto",description = "Topic data transfer object")
 
 public class TopicDto {
-    @ApiModelProperty(notes = "Author of topic")
-    private String author;
+//    @ApiModelProperty(notes = "Author of topic")
+//    private String owner;
     @ApiModelProperty(notes = "Title of topic")
     private String title;
     @ApiModelProperty(notes = "Topic content")

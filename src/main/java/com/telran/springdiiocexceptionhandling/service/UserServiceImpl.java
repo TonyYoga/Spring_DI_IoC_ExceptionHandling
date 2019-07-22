@@ -42,9 +42,6 @@ public class UserServiceImpl implements UserService {
         return UserEntity.builder()
                 .email(userDto.getEmail())
                 .password(securityConfig.passwordEncoder().encode(userDto.getPassword()))
-//                .name(userDto.getName())
-//                .city(userDto.getCity())
-//                .phone(userDto.getPhone())
                 .build();
     }
 }
