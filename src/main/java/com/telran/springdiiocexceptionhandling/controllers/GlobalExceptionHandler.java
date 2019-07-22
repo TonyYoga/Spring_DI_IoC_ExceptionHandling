@@ -5,25 +5,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {IllegalArgumentException.class})
-    public ResponseEntity<?> handleIllegalArgumentException(RuntimeException ex, WebRequest request) {
-        String msg = "{\"error\":\"Id format error!\"}";
-        return new ResponseEntity<>(msg, HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> handleIllegalArgumentException(RuntimeException ex) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = ServiceException.class)
-    public ResponseEntity<?> handleServiceException(RuntimeException ex, WebRequest request) {
+    public ResponseEntity<?> handleServiceException(RuntimeException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(value = Exception.class)
-    public ResponseEntity<?> handleOtherException(RuntimeException ex, WebRequest request) {
+    public ResponseEntity<?> handleOtherException(RuntimeException ex) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

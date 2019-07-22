@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.telran.springdiiocexceptionhandling.providers.exception.StoreProviderException;
 import com.telran.springdiiocexceptionhandling.repository.entity.ProfileEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -16,11 +15,14 @@ import java.util.List;
 @Component
 public class ProfileProviderImpl implements StoreProvider<ProfileEntity>{
 
-    @Autowired
     private ObjectMapper mapper;
 
     @Value("${dbProfiles}")
     private String fileName;
+
+    public ProfileProviderImpl(ObjectMapper mapper) {
+        this.mapper = mapper;
+    }
 
     @Override
     public void storeData(List<ProfileEntity> entities) {

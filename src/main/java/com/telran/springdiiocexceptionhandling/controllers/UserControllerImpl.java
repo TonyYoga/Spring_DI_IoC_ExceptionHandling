@@ -7,7 +7,6 @@ import com.telran.springdiiocexceptionhandling.service.exception.ServiceExceptio
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,12 +17,11 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping("user")
 public class UserControllerImpl implements UserController {
-    @Autowired
     private UserService userService;
 
-//    public UserControllerImpl(UserService userService) {
-//        this.userService = userService;
-//    }
+    public UserControllerImpl(UserService userService) {
+        this.userService = userService;
+    }
 
     @ApiOperation(value = "Add new user", response = SuccessResponseDto.class)
     @ApiResponses(value = {

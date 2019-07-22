@@ -8,7 +8,6 @@ import com.telran.springdiiocexceptionhandling.service.exception.ServiceExceptio
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -21,15 +20,15 @@ import java.util.UUID;
 @RequestMapping("comment")
 public class CommentControllerImpl implements CommentController {
 
-    @Autowired
-    CommentService commentService;
+    private CommentService commentService;
 
-    @Autowired
-    OwnerValidator validator;
+    private OwnerValidator validator;
 
-    CommentControllerMetric commentControllerMetric;
+    private CommentControllerMetric commentControllerMetric;
 
-    public CommentControllerImpl(CommentControllerMetric commentControllerMetric) {
+    public CommentControllerImpl(CommentService commentService, OwnerValidator validator, CommentControllerMetric commentControllerMetric) {
+        this.commentService = commentService;
+        this.validator = validator;
         this.commentControllerMetric = commentControllerMetric;
     }
 

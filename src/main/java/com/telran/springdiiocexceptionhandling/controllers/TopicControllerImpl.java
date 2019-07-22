@@ -8,7 +8,6 @@ import com.telran.springdiiocexceptionhandling.service.exception.ServiceExceptio
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,15 +22,15 @@ import java.util.UUID;
 public class TopicControllerImpl implements TopicController {
 
 
-    @Autowired
-    TopicService topicService;
+    private TopicService topicService;
 
-    @Autowired
-    OwnerValidator validator;
+    private OwnerValidator validator;
 
     private TopicControllerMetric controllerMetric;
 
-    public TopicControllerImpl(TopicControllerMetric controllerMetric) {
+    public TopicControllerImpl(TopicService topicService, OwnerValidator validator, TopicControllerMetric controllerMetric) {
+        this.topicService = topicService;
+        this.validator = validator;
         this.controllerMetric = controllerMetric;
     }
 

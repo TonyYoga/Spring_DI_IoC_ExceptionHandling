@@ -3,15 +3,17 @@ package com.telran.springdiiocexceptionhandling.service;
 import com.telran.springdiiocexceptionhandling.repository.TopicRepository;
 import com.telran.springdiiocexceptionhandling.repository.entity.CommentEntity;
 import com.telran.springdiiocexceptionhandling.repository.exception.IllegalIdException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
 @Component
 public class OwnerValidatorImpl implements OwnerValidator {
-    @Autowired
-    TopicRepository repository;
+    private TopicRepository repository;
+
+    public OwnerValidatorImpl(TopicRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public boolean topicOwnerValidator(String topicId, String owner) {
@@ -26,7 +28,7 @@ public class OwnerValidatorImpl implements OwnerValidator {
     public boolean commentOwnerValidator(String topicId, String commentId, String owner) {
         try {
             CommentEntity entity = repository.getCommentById(UUID.fromString(topicId), UUID.fromString(commentId));
-            if (entity.getAuthor() != owner) {
+            if (entity.getAuthor().equals(owner)) {
                 throw new SecurityException("Wrong comment owner" + owner);
             }
             return true;

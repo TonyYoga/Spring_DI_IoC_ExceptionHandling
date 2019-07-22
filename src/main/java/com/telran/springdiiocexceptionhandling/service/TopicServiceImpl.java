@@ -8,7 +8,6 @@ import com.telran.springdiiocexceptionhandling.repository.entity.CommentEntity;
 import com.telran.springdiiocexceptionhandling.repository.entity.TopicEntity;
 import com.telran.springdiiocexceptionhandling.repository.exception.RepositoryException;
 import com.telran.springdiiocexceptionhandling.service.exception.ServiceException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,8 +17,11 @@ import java.util.stream.StreamSupport;
 
 @Service
 public class TopicServiceImpl implements TopicService {
-    @Autowired
-    TopicRepository topicRepository;
+    private TopicRepository topicRepository;
+
+    public TopicServiceImpl(TopicRepository topicRepository) {
+        this.topicRepository = topicRepository;
+    }
 
     @Override
     public void addTopic(TopicResponseDto topicResponseDto) {

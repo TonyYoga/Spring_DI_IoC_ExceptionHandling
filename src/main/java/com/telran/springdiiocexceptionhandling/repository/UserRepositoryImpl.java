@@ -28,9 +28,8 @@ public class UserRepositoryImpl implements UserRepository{
                               @Qualifier("userRolesProvider") StoreProvider<RolesEntity> userRolesProvider) {
         this.provider = provider;
         this.userRolesProvider = userRolesProvider;
-        users = new ConcurrentHashMap<>();
-        rolesOwners = new CopyOnWriteArrayList<>();
-
+        this.users = new ConcurrentHashMap<>();
+        this.rolesOwners = new CopyOnWriteArrayList<>();
     }
 
     @Override

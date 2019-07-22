@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.telran.springdiiocexceptionhandling.providers.exception.StoreProviderException;
 import com.telran.springdiiocexceptionhandling.repository.entity.TopicEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -17,11 +16,14 @@ import java.util.List;
 @Component
 public class StoreProviderImpl implements StoreProvider<TopicEntity> {
 
-    @Autowired
-    ObjectMapper mapper;
+    private ObjectMapper mapper;
 
     @Value("${dbTopics}")
     private String fileName;
+
+    public StoreProviderImpl(ObjectMapper mapper) {
+        this.mapper = mapper;
+    }
 
     @Override
     public void storeData(List<TopicEntity> entities) {

@@ -7,15 +7,17 @@ import com.telran.springdiiocexceptionhandling.repository.TopicRepository;
 import com.telran.springdiiocexceptionhandling.repository.entity.CommentEntity;
 import com.telran.springdiiocexceptionhandling.repository.exception.RepositoryException;
 import com.telran.springdiiocexceptionhandling.service.exception.ServiceException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
 public class CommentServiceImpl implements CommentService {
-    @Autowired
-    TopicRepository repository;
+    private TopicRepository repository;
+
+    public CommentServiceImpl(TopicRepository repository) {
+        this.repository = repository;
+    }
 
     @Override
     public void addComment(String topicId, CommentFullDto commentFullDto) {
