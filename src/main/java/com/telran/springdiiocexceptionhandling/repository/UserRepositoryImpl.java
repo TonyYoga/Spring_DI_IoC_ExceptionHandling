@@ -4,7 +4,6 @@ import com.telran.springdiiocexceptionhandling.providers.StoreProvider;
 import com.telran.springdiiocexceptionhandling.repository.entity.RolesEntity;
 import com.telran.springdiiocexceptionhandling.repository.entity.UserEntity;
 import com.telran.springdiiocexceptionhandling.repository.exception.DuplicateIdException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
@@ -22,15 +21,16 @@ public class UserRepositoryImpl implements UserRepository{
 
     private StoreProvider<UserEntity> provider;
 
-    @Autowired
-    @Qualifier("userRolesProvider")
     private StoreProvider<RolesEntity> userRolesProvider;
 
 
-    public UserRepositoryImpl(@Qualifier("userProvider") StoreProvider<UserEntity> provider) {
+    public UserRepositoryImpl(@Qualifier("userProvider") StoreProvider<UserEntity> provider,
+                              @Qualifier("userRolesProvider") StoreProvider<RolesEntity> userRolesProvider) {
         this.provider = provider;
+        this.userRolesProvider = userRolesProvider;
         users = new ConcurrentHashMap<>();
         rolesOwners = new CopyOnWriteArrayList<>();
+
     }
 
     @Override
@@ -56,7 +56,7 @@ public class UserRepositoryImpl implements UserRepository{
     @Override
     public String[] getRoles(String email) {
         RolesEntity res = rolesOwners.stream().filter(rolesEntity -> rolesEntity.getEmail().equals(email)).findAny().orElseThrow();
-        return res.getRoles().stream().map(role -> role.name()).toArray(String[]::new);
+        return res.getRoles().stream().map(Enum::name).toArray(String[]::new);
     }
 
     @PostConstruct
@@ -71,7 +71,7 @@ public class UserRepositoryImpl implements UserRepository{
 
     @PreDestroy
     private void storeData() {
-        provider.storeData(new ArrayList<UserEntity>(users.values()));
+        provider.storeData(new ArrayList<>(users.values()));
         userRolesProvider.storeData(rolesOwners);
     }
 }

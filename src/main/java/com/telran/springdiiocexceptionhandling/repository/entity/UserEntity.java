@@ -10,7 +10,4 @@ import lombok.*;
 public class UserEntity {
     private String email;
     private String password;
-    private String name;
-    private String city;
-    private String phone;
 }

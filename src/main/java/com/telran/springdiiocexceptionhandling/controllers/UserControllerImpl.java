@@ -19,7 +19,11 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("user")
 public class UserControllerImpl implements UserController {
     @Autowired
-    UserService userService;
+    private UserService userService;
+
+//    public UserControllerImpl(UserService userService) {
+//        this.userService = userService;
+//    }
 
     @ApiOperation(value = "Add new user", response = SuccessResponseDto.class)
     @ApiResponses(value = {

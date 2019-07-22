@@ -4,9 +4,7 @@ import com.telran.springdiiocexceptionhandling.controllers.dto.FullProfileDto;
 import com.telran.springdiiocexceptionhandling.controllers.dto.ProfileDto;
 import com.telran.springdiiocexceptionhandling.controllers.dto.SuccessResponseDto;
 import com.telran.springdiiocexceptionhandling.service.ProfileService;
-import com.telran.springdiiocexceptionhandling.service.UserService;
 import com.telran.springdiiocexceptionhandling.service.exception.ServiceException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,17 +14,18 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 @RequestMapping("profile")
 public class ProfileControllerImpl implements ProfileController {
-    @Autowired
-    ProfileService profileService;
+    private ProfileService profileService;
 
-    @Autowired
-    UserService userService;
+    public ProfileControllerImpl(ProfileService profileService) {
+        this.profileService = profileService;
+    }
 
     @PostMapping
     @Override
     public FullProfileDto addProfile(@RequestBody ProfileDto profile) {
+
         String owner = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-        FullProfileDto fullProfileDto = FullProfileDto.builder()
+        FullProfileDto fullProfileDto = FullProfileDto.fullProfileDto()
                 .email(owner)
                 .firstName(profile.getFirstName())
                 .lastName(profile.getLastName())
@@ -42,10 +41,17 @@ public class ProfileControllerImpl implements ProfileController {
 
     @PutMapping
     @Override
-    public SuccessResponseDto updateProfile(@RequestBody FullProfileDto profileDto) {
+    public SuccessResponseDto updateProfile(@RequestBody ProfileDto profile) {
         try {
-            profileService.updProfile(profileDto);
-            return new SuccessResponseDto("Profile of " + profileDto.getEmail() + " was updated!");
+            String owner = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+            FullProfileDto fullProfileDto = FullProfileDto.fullProfileDto()
+                    .email(owner)
+                    .firstName(profile.getFirstName())
+                    .lastName(profile.getLastName())
+                    .bDay(profile.getBDay())
+                    .build();
+            profileService.updProfile(fullProfileDto);
+            return new SuccessResponseDto(String.format("Profile of %s was updated!", owner));
         } catch (ServiceException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
         }
@@ -56,7 +62,7 @@ public class ProfileControllerImpl implements ProfileController {
     @GetMapping("{id}")
     public FullProfileDto getProfile(@PathVariable("id") String id) {
         try {
-            return profileService.getProfileById(id);
+            return profileService.getProfileByOwner(id);
         } catch (ServiceException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, ex.getMessage());
         }

@@ -1,9 +1,6 @@
 package com.telran.springdiiocexceptionhandling.config;
 
-import com.telran.springdiiocexceptionhandling.providers.StoreProvider;
-import com.telran.springdiiocexceptionhandling.providers.StoreProviderImpl;
-import com.telran.springdiiocexceptionhandling.providers.UserRolesStoreProviderImpl;
-import com.telran.springdiiocexceptionhandling.providers.UserStoreProviderImpl;
+import com.telran.springdiiocexceptionhandling.providers.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +24,12 @@ public class BeanFactory {
     @Qualifier("userRolesProvider")
     public StoreProvider getUserRoleStoreProvider() {
         return new UserRolesStoreProviderImpl();
+    }
+
+    @Bean
+    @Qualifier("profileProviderImpl")
+    public StoreProvider getProfileProvider() {
+        return new ProfileProviderImpl();
     }
 
 }

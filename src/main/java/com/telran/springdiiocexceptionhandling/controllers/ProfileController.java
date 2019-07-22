@@ -8,7 +8,7 @@ public interface ProfileController {
 
     FullProfileDto addProfile(ProfileDto profile);
 
-    SuccessResponseDto updateProfile(FullProfileDto profileDto);
+    SuccessResponseDto updateProfile(ProfileDto profileDto);
 
     FullProfileDto getProfile(String id);
 

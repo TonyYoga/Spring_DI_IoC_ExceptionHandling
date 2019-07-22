@@ -1,5 +1,6 @@
 package com.telran.springdiiocexceptionhandling.controllers.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -7,7 +8,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,6 +21,7 @@ public class ProfileDto {
     @ApiModelProperty(notes = "User last name")
     private String lastName;
     @ApiModelProperty(notes = "User birthday")
-    private LocalDateTime bDay;
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate bDay;
 
 }

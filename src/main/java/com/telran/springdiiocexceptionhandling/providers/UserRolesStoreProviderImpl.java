@@ -19,7 +19,7 @@ public class UserRolesStoreProviderImpl implements StoreProvider<RolesEntity> {
     @Autowired
     ObjectMapper mapper;
 
-    @Value("dbRoles")
+    @Value("${dbRoles}")
     private String filename;
 
 

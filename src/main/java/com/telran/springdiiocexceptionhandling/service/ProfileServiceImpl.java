@@ -47,20 +47,22 @@ public class ProfileServiceImpl implements ProfileService{
     }
 
     private ProfileEntity map(FullProfileDto profileDto) {
+        System.out.println(profileDto.getBDay().atStartOfDay());
         return ProfileEntity.builder()
                 .firstName(profileDto.getFirstName())
                 .lastName(profileDto.getLastName())
                 .owner(profileDto.getEmail())
-                .bDay(Timestamp.valueOf(profileDto.getBDay()))
+                .bDay(Timestamp.valueOf(profileDto.getBDay().atStartOfDay()))
                 .build();
     }
 
     private FullProfileDto map(ProfileEntity profile) {
-        return FullProfileDto.builder()
+        System.out.println(profile.getBDay());
+        return FullProfileDto.fullProfileDto()
                 .firstName(profile.getFirstName())
                 .lastName(profile.getLastName())
                 .email(profile.getOwner())
-                .bDay(profile.getBDay().toLocalDateTime())
+                .bDay(profile.getBDay().toLocalDateTime().toLocalDate())
                 .build();
     }
 }

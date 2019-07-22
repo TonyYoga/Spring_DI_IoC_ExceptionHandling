@@ -3,7 +3,7 @@ package com.telran.springdiiocexceptionhandling.providers;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.telran.springdiiocexceptionhandling.providers.exception.StoreProviderException;
-import com.telran.springdiiocexceptionhandling.repository.entity.UserEntity;
+import com.telran.springdiiocexceptionhandling.repository.entity.ProfileEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -13,18 +13,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
-
 @Component
-public class UserStoreProviderImpl implements StoreProvider<UserEntity> {
-    @Autowired
-    ObjectMapper mapper;
+public class ProfileProviderImpl implements StoreProvider<ProfileEntity>{
 
-    @Value("${dbUsers}")
+    @Autowired
+    private ObjectMapper mapper;
+
+    @Value("${dbProfiles}")
     private String fileName;
 
-
     @Override
-    public void storeData(List<UserEntity> entities) {
+    public void storeData(List<ProfileEntity> entities) {
         try {
             mapper.writeValue(Files.newOutputStream(Path.of(fileName)), entities);
         } catch (IOException e) {
@@ -34,16 +33,19 @@ public class UserStoreProviderImpl implements StoreProvider<UserEntity> {
     }
 
     @Override
-    public List<UserEntity> loadData() {
+    public List<ProfileEntity> loadData() {
         try {
             if (Files.exists(Path.of(fileName))) {
-                return mapper.readValue(Files.newBufferedReader(Path.of(fileName)), new TypeReference<List<UserEntity>>() {
+                return mapper.readValue(Files.newBufferedReader(Path.of(fileName)), new TypeReference<List<ProfileEntity>>() {
                 });
+            } else {
+                return Collections.emptyList();
             }
         } catch (IOException e) {
             e.printStackTrace();
             throw new StoreProviderException("File System error", e);
         }
-        return Collections.emptyList();
     }
+
+
 }

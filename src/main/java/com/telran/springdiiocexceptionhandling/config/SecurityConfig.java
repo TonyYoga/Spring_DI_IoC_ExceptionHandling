@@ -8,42 +8,36 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
-import java.security.Principal;
-import java.util.Arrays;
 
 @EnableWebSecurity
 public class SecurityConfig {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     @Configuration
     class SecurityAdapter extends WebSecurityConfigurerAdapter {
         @Override
         protected void configure(HttpSecurity http) throws Exception {
 
-            http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            http
+                    .csrf().disable()
+                    .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
                     .authorizeRequests()
-//                    .antMatchers("/v2/api-docs", "/swagger-resources/configuration/ui", "/swagger-resources", "/swagger-resources/configuration/security", "/swagger-ui.html", "/webjars/**").permitAll()
                     .antMatchers("/admin/**").hasRole(RolesEntity.Role.ADMIN.name())
                     .antMatchers(HttpMethod.GET, "/topic").permitAll()
                     .antMatchers("/topic/**","/comment/**").hasRole(RolesEntity.Role.USER.name())
+                    .antMatchers("/profile").authenticated()
                     .antMatchers(HttpMethod.POST,"/user").permitAll()
                     .anyRequest().permitAll()
                     .and()

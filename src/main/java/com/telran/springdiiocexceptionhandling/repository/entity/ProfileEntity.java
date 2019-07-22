@@ -1,5 +1,6 @@
 package com.telran.springdiiocexceptionhandling.repository.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import java.sql.Timestamp;
@@ -13,5 +14,6 @@ public class ProfileEntity {
     private String owner;
     private String firstName;
     private String lastName;
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Timestamp bDay;
 }

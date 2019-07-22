@@ -17,10 +17,4 @@ public class UserDto {
     private String email;
     @ApiModelProperty(notes = "User password")
     private String password;
-    @ApiModelProperty(notes = "User name")
-    private String name;
-    @ApiModelProperty(notes = "User city")
-    private String city;
-    @ApiModelProperty(notes = "User phone")
-    private String phone;
 }
