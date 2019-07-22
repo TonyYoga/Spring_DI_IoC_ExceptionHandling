@@ -23,7 +23,7 @@ public class CommentFullDto extends CommentDto{
     @ApiModelProperty(notes = "Owner of comment")
     private String owner;
 
-    @ApiModelProperty(notes = "Owner of comment")
+    @ApiModelProperty(notes = "Author of comment")
     private String author;
 
     @ApiModelProperty(notes = "Date and time of comment")

@@ -10,24 +10,24 @@ import java.util.List;
 
 /*
 Json example
-[
-  {
-    "id": "[String]",
-    "owner": "[String]",
-    "title": "[String]",
-    "content": "[String]",
-    "date": "[DateTime]",
-    "comments": [
-      {
-        "id": "[String]",
-        "date": "[DateTime]",
-        "owner": "[String]",
-        "message": "[String]"
-      }
-    ]
-  }
-]
-
+    {
+        "title": [String],
+        "content": [String],
+        "id": [String],
+        "owner": [String],
+        "date": [DateTime],
+        "firstLastName": [String],
+        "comments": [
+            {
+                "message": [String],
+                "id": [String],
+                "owner": [String],
+                "author": [String],
+                "date": [DateTime]
+            },
+            ...
+        ]
+    }
  */
 @NoArgsConstructor
 @AllArgsConstructor

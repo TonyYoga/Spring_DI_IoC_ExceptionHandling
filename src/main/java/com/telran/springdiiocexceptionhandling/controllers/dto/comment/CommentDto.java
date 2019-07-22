@@ -10,9 +10,6 @@ import lombok.Setter;
 
 /*
 COMMENT:
-id - String format, server should generate	it
-date - DateTime added, server should put when topic adding, Format: "dd/MM/yyyy hh:mm"
-owner - String format, required
 message - String format, required
  */
 @AllArgsConstructor
@@ -22,8 +19,6 @@ message - String format, required
 
 @ApiModel(value = "CommentDto",description = "Comment data transfer object")
 public class CommentDto {
-//    @ApiModelProperty(notes = "Author of Comment")
-//    private String author;
     @ApiModelProperty(notes = "Message")
     private String message;
 }

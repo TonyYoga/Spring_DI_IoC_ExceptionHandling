@@ -29,8 +29,6 @@ JSON Example of Topic request
 @ApiModel(value = "TopicDto",description = "Topic data transfer object")
 
 public class TopicDto {
-//    @ApiModelProperty(notes = "Author of topic")
-//    private String owner;
     @ApiModelProperty(notes = "Title of topic")
     private String title;
     @ApiModelProperty(notes = "Topic content")
