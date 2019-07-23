@@ -13,8 +13,8 @@ import com.telran.springdiiocexceptionhandling.repository.exception.RepositoryEx
 import com.telran.springdiiocexceptionhandling.service.exception.ServiceException;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -47,7 +47,7 @@ public class TopicServiceImpl implements TopicService {
     @Override
     public void removeById(String id) {
         try {
-            topicRepository.removeTopic(UUID.fromString(id));
+            topicRepository.removeTopic(Integer.valueOf(id));
         } catch (RepositoryException ex) {
             throw new ServiceException(ex.getMessage(), ex);
         }
@@ -56,11 +56,11 @@ public class TopicServiceImpl implements TopicService {
 
     private TopicEntity map(TopicResponseDto dto) {
         return new TopicEntity(
-                UUID.fromString(dto.getId()),
+                Integer.valueOf(dto.getId()),
                 dto.getOwner(),
                 dto.getTitle(),
                 dto.getContent(),
-                dto.getDate(),
+                Timestamp.valueOf(dto.getDate()),
                 null
         );
     }
@@ -82,7 +82,7 @@ public class TopicServiceImpl implements TopicService {
                 .title(topicEntity.getTitle())
                 .content(topicEntity.getContent())
                 .comments(map(topicEntity.getComments()))
-                .date(topicEntity.getDate())
+                .date(topicEntity.getDate().toLocalDateTime())
                 .build();
     }
 
@@ -104,7 +104,7 @@ public class TopicServiceImpl implements TopicService {
 
         return CommentFullDto.fullCommentBuilder()
                 .id(entity.getId().toString())
-                .date(entity.getDate())
+                .date(entity.getDate().toLocalDateTime())
                 .author(userName)
                 .owner(entity.getOwner())
                 .message(entity.getMessage())

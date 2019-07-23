@@ -4,24 +4,23 @@ import com.telran.springdiiocexceptionhandling.repository.entity.CommentEntity;
 import com.telran.springdiiocexceptionhandling.repository.entity.TopicEntity;
 import com.telran.springdiiocexceptionhandling.repository.exception.RepositoryException;
 
-import java.util.UUID;
-
 public interface TopicRepository {
 
-    boolean addTopic(TopicEntity topic);
+    int addTopic(TopicEntity topic);
 
-    boolean removeTopic(UUID id);
+    boolean removeTopic(int id);
 
     Iterable<TopicEntity> getAllTopics();
 
-    boolean addComment(UUID topicId, CommentEntity comment);
-    boolean removeComment(UUID topicId, UUID commentId);
-    TopicEntity getTopicById(UUID topicId);
-    CommentEntity getCommentById(UUID topicId, UUID commentId);
+    int addComment(int topicId, CommentEntity comment);
+    boolean removeComment(int topicId, int commentId);
+    TopicEntity getTopicById(int topicId);
+    CommentEntity getCommentById(int topicId, int commentId);
 
-    default boolean updateComment(UUID topicId, CommentEntity comment){
+    default boolean updateComment(int topicId, CommentEntity comment){
         if(removeComment(topicId,comment.getId())){
-            return addComment(topicId,comment);
+            addComment(topicId,comment);
+            return true;
         }
         throw new RepositoryException("TopicRepository error");
     }

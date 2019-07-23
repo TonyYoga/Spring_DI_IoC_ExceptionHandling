@@ -34,9 +34,9 @@ public class SecurityConfig {
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                     .and()
                     .authorizeRequests()
-                    .antMatchers("/admin/**").hasRole(RolesEntity.Role.ADMIN.name())
                     .antMatchers(HttpMethod.GET, "/topic").permitAll()
                     .antMatchers("/topic/**","/comment/**").hasRole(RolesEntity.Role.USER.name())
+                    .antMatchers("/admin/**").hasRole(RolesEntity.Role.ADMIN.name())
                     .antMatchers("/profile").authenticated()
                     .antMatchers(HttpMethod.POST,"/user").permitAll()
                     .anyRequest().permitAll()
@@ -52,6 +52,9 @@ public class SecurityConfig {
                     throw new UsernameNotFoundException("No such email: " + email);
                 }
                 String[] roles = userRepository.getRoles(email);
+
+                System.out.println(userEntity.getEmail() + " " + userEntity.getPassword());
+                System.out.println(roles[0]);
                 return User.builder()
                         .username(userEntity.getEmail())
                         .password(userEntity.getPassword())

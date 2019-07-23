@@ -13,7 +13,7 @@ import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
 
-@Component
+//@Component
 public class UserStoreProviderImpl implements StoreProvider<UserEntity> {
     private ObjectMapper mapper;
 

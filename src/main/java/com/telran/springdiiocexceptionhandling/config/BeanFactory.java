@@ -16,28 +16,28 @@ public class BeanFactory {
         this.mapper = mapper;
     }
 
-    @Bean
-    @Qualifier("topicProvider")
-    public StoreProvider getTopicStoreProvider() {
-        return new StoreProviderImpl(mapper);
-    }
-
-    @Bean
-    @Qualifier("userProvider")
-    public StoreProvider getUserStoreProvider() {
-        return new UserStoreProviderImpl(mapper);
-    }
-
-    @Bean
-    @Qualifier("userRolesProvider")
-    public StoreProvider getUserRoleStoreProvider() {
-        return new UserRolesStoreProviderImpl(mapper);
-    }
-
-    @Bean
-    @Qualifier("profileProviderImpl")
-    public StoreProvider getProfileProvider() {
-        return new ProfileProviderImpl(mapper);
-    }
+//    @Bean
+//    @Qualifier("topicProvider")
+//    public StoreProvider getTopicStoreProvider() {
+//        return new StoreProviderImpl(mapper);
+//    }
+//
+//    @Bean
+//    @Qualifier("userProvider")
+//    public StoreProvider getUserStoreProvider() {
+//        return new UserStoreProviderImpl(mapper);
+//    }
+//
+//    @Bean
+//    @Qualifier("userRolesProvider")
+//    public StoreProvider getUserRoleStoreProvider() {
+//        return new UserRolesStoreProviderImpl(mapper);
+//    }
+//
+//    @Bean
+//    @Qualifier("profileProviderImpl")
+//    public StoreProvider getProfileProvider() {
+//        return new ProfileProviderImpl(mapper);
+//    }
 
 }

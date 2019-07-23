@@ -2,6 +2,7 @@ package com.telran.springdiiocexceptionhandling.repository.entity;
 
 import lombok.*;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -11,10 +12,10 @@ import java.util.UUID;
 @Setter
 @ToString
 @EqualsAndHashCode(of="id")
-
+@Builder
 public class CommentEntity {
-    private UUID id;
+    private Integer id;
     private String owner;
     private String message;
-    private LocalDateTime date;
+    private Timestamp date;
 }

@@ -46,8 +46,10 @@ public class TopicControllerImpl implements TopicController {
     @PostMapping
     public TopicResponseDto addTopic(@RequestBody TopicDto topicDto) {
         String owner = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        String password = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getPassword();
+        System.out.println(owner + " " + password);
         TopicResponseDto res = TopicResponseDto.topicResponseBuilder()
-                .id(UUID.randomUUID().toString())
+//                .id(UUID.randomUUID().toString())
                 .owner(owner)
                 .title(topicDto.getTitle())
                 .content(topicDto.getContent())
