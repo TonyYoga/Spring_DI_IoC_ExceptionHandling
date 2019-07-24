@@ -22,8 +22,6 @@ public class UserRepositoryDBImpl implements UserRepository {
 
     @Override
     public boolean addUser(UserEntity userEntity) {
-        System.out.println(userEntity.getEmail() + " " + userEntity.getPassword());
-        //TODO добавить роль при добавлении юзера
         try (Connection connection = source.getConnection()){
             connection.setAutoCommit(false);
             PreparedStatement addUser = connection.prepareStatement("INSERT INTO users VALUES (?, ?)");
@@ -32,7 +30,7 @@ public class UserRepositoryDBImpl implements UserRepository {
             addUser.execute();
             PreparedStatement addRole = connection.prepareStatement("INSERT INTO users_roles VALUES (?, (SELECT id FROM roles WHERE role_name =?))");
             addRole.setString(1, userEntity.getEmail());
-            addRole.setString(2, "ROLE_USER");
+            addRole.setString(2, "USER");
             addRole.execute();
             connection.commit();
             connection.setAutoCommit(true);
@@ -72,7 +70,6 @@ public class UserRepositoryDBImpl implements UserRepository {
             if (ps.execute()) {
                 ResultSet rs = ps.getResultSet();
                 while (rs.next()) {
-                    int i = 0;
                     res.add(rs.getString("role_name"));
                 }
                 return res.toArray(new String[0]);

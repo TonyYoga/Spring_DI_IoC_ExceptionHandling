@@ -10,7 +10,6 @@ import com.telran.springdiiocexceptionhandling.service.exception.ServiceExceptio
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.UUID;
 
 @Service
 public class CommentServiceImpl implements CommentService {
@@ -21,9 +20,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void addComment(String topicId, CommentFullDto commentFullDto) {
+    public int addComment(String topicId, CommentFullDto commentFullDto) {
         try {
-            repository.addComment(Integer.valueOf(topicId), map(commentFullDto));
+            return repository.addComment(Integer.valueOf(topicId), map(commentFullDto));
         } catch (RepositoryException ex) {
             throw new ServiceException(ex.getMessage(), ex);
         }

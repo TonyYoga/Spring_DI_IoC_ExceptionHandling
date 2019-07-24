@@ -7,14 +7,10 @@ import com.telran.springdiiocexceptionhandling.repository.exception.RepositoryEx
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
-import java.util.List;
 
 @Repository
 public class TopicRepositoryDBImpl implements TopicRepository {
@@ -26,25 +22,18 @@ public class TopicRepositoryDBImpl implements TopicRepository {
 
     @Override
     public int addTopic(TopicEntity topic) {
-        //TODO make it simple with one query
         try (Connection connection = source.getConnection()) {
-            PreparedStatement psTopic = connection.prepareStatement("INSERT INTO posts (content, date_time, username) VALUES (?, ?, ?)");
+            PreparedStatement psTopic = connection.prepareStatement("INSERT INTO posts (content, date_time, username) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             psTopic.setString(1, topic.getContent());
             psTopic.setTimestamp(2, topic.getDate());
             psTopic.setString(3, topic.getOwner());
-            psTopic.execute();
-            PreparedStatement getId = connection.prepareStatement("SELECT id FROM posts WHERE content = ? AND date_time = ? AND username = ?");
-            getId.setString(1, topic.getContent());
-            getId.setTimestamp(2, topic.getDate());
-            getId.setString(3, topic.getOwner());
-            ResultSet rs = getId.executeQuery();
-            if (rs.next()) {
-                return rs.getInt("id");
-            }
+            psTopic.executeUpdate();
+            ResultSet rs = psTopic.getGeneratedKeys();
+            rs.next();
+            return rs.getInt(1);
         } catch (SQLException e) {
             throw new RepositoryException(e.getMessage(), e);
         }
-        return -1;
     }
 
     @Override
@@ -52,10 +41,11 @@ public class TopicRepositoryDBImpl implements TopicRepository {
         try (Connection connection = source.getConnection()) {
             PreparedStatement ps = connection.prepareStatement("DELETE FROM posts WHERE id = ?");
             ps.setInt(1, id);
-            if (ps.execute()) {
-                return true;
+            int rowAffected = ps.executeUpdate();
+            if (rowAffected == 0) {
+                throw new IllegalIdException(String.format("Post with id %d not found", id));
             }
-            throw new IllegalIdException(String.format("Post with id %d not found"));
+            return true;
         } catch (SQLException e) {
             throw new RepositoryException(e.getMessage(), e);
         }
@@ -65,10 +55,10 @@ public class TopicRepositoryDBImpl implements TopicRepository {
     public Iterable<TopicEntity> getAllTopics() {
         Deque<TopicEntity> res = new LinkedList<>();
         try (Connection connection = source.getConnection()) {
-            PreparedStatement getPost = connection.prepareStatement("SELECT * FROM posts p JOIN comments c on p.id = c.post_id");
+            PreparedStatement getPost = connection.prepareStatement("SELECT * FROM posts p LEFT JOIN comments c on p.id = c.post_id");
             ResultSet rs = getPost.executeQuery();
             int postId = -1;
-            TopicEntity tp = null;
+            TopicEntity tp;
             while (rs.next()) {
                 if (!res.isEmpty()) {
                     postId = res.peek().getId();
@@ -80,18 +70,12 @@ public class TopicRepositoryDBImpl implements TopicRepository {
                             .owner(rs.getString("username"))
                             .date(rs.getTimestamp("p.date_time"))
                             .build();
-                    CommentEntity comment = CommentEntity.builder()
-                            .id(rs.getInt("c.id"))
-                            .message(rs.getString("comment"))
-                            .date(rs.getTimestamp("c.date_time"))
-                            .owner(rs.getString("c.username"))
-                            .build();
-                    List<CommentEntity> comments = new ArrayList<>();
-                    comments.add(comment);
-                    tp.setComments(comments);
+                    tp.setComments(new ArrayList<>());
                     res.addFirst(tp);
                 } else {
                     tp = res.peek();
+                }
+                if(rs.getInt("c.id") != 0) {
                     CommentEntity comment = CommentEntity.builder()
                             .id(rs.getInt("c.id"))
                             .message(rs.getString("comment"))
@@ -100,7 +84,6 @@ public class TopicRepositoryDBImpl implements TopicRepository {
                             .build();
                     tp.getComments().add(comment);
                 }
-
             }
         } catch (SQLException e) {
             throw new RepositoryException(e.getMessage(), e);
@@ -111,23 +94,15 @@ public class TopicRepositoryDBImpl implements TopicRepository {
     @Override
     public int addComment(int topicId, CommentEntity comment) {
         try (Connection connection = source.getConnection()) {
-            PreparedStatement addComment = connection.prepareStatement("INSERT INTO comments(comment, date_time, post_id, username) VALUES (?, ?, ?, ?)");
+            PreparedStatement addComment = connection.prepareStatement("INSERT INTO comments(comment, date_time, post_id, username) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             addComment.setString(1, comment.getMessage());
             addComment.setTimestamp(2, comment.getDate());
             addComment.setInt(3, topicId);
             addComment.setString(4, comment.getOwner());
-            addComment.execute();
-            PreparedStatement getId = connection.prepareStatement("SELECT id FROM comments " +
-                    "WHERE comment = ? AND date_time = ? AND post_id = ? AND username = ?");
-            getId.setString(1, comment.getMessage());
-            getId.setTimestamp(2, comment.getDate());
-            getId.setInt(3, topicId);
-            getId.setString(4, comment.getOwner());
-            ResultSet rs = getId.executeQuery();
-            if (rs.next()) {
-                return rs.getInt("id");
-            }
-            throw new IllegalIdException(String.format("Post with id %d not found"));
+            addComment.executeUpdate();
+            ResultSet rs = addComment.getGeneratedKeys();
+            rs.next();
+            return rs.getInt(1);
 
         } catch (SQLException e) {
             throw new RepositoryException(e.getMessage(), e);
@@ -140,10 +115,11 @@ public class TopicRepositoryDBImpl implements TopicRepository {
             PreparedStatement remove = connection.prepareStatement("DELETE FROM comments WHERE id = ? AND post_id = ?");
             remove.setInt(1, commentId);
             remove.setInt(2, topicId);
-            if (remove.execute()) {
-                return true;
+            int rowAffected = remove.executeUpdate();
+            if (rowAffected == 0) {
+                throw new IllegalIdException(String.format("Comment with id %d to post with id %d not found", commentId, topicId));
             }
-            throw new IllegalIdException(String.format("Comment with id %d to post with id %d not found", commentId, topicId));
+            return true;
         } catch (SQLException e) {
             throw new RepositoryException(e.getMessage(), e);
         }
@@ -152,25 +128,25 @@ public class TopicRepositoryDBImpl implements TopicRepository {
     @Override
     public TopicEntity getTopicById(int topicId) {
         try (Connection connection = source.getConnection()) {
-            PreparedStatement getTopic = connection.prepareStatement("SELECT * FROM posts p JOIN comments c on c.post_id = p.id WHERE post_id = ?");
+            PreparedStatement getTopic = connection.prepareStatement("SELECT * FROM posts p LEFT JOIN comments c on c.post_id = p.id WHERE p.id = ?");
             getTopic.setInt(1, topicId);
             ResultSet rs = getTopic.executeQuery();
             TopicEntity topic = null;
             while (rs.next()) {
                 if (topic == null) {
                     topic = TopicEntity.builder()
-                            .id(rs.getInt("posts.id"))
-                            .content(rs.getString("content"))
-                            .date(rs.getTimestamp("posts.date_time"))
-                            .owner(rs.getString("posts.username"))
+                            .id(rs.getInt("p.id"))
+                            .content(rs.getString("p.content"))
+                            .date(rs.getTimestamp("p.date_time"))
+                            .owner(rs.getString("p.username"))
                             .comments(new ArrayList<>())
                             .build();
                 }
                 CommentEntity comment = CommentEntity.builder()
-                        .owner(rs.getString("comments.username"))
-                        .message(rs.getString("comment"))
-                        .date(rs.getTimestamp("comments.date_time"))
-                        .id(rs.getInt("comments.id"))
+                        .owner(rs.getString("c.username"))
+                        .message(rs.getString("c.comment"))
+                        .date(rs.getTimestamp("c.date_time"))
+                        .id(rs.getInt("c.id"))
                         .build();
                 topic.getComments().add(comment);
             }

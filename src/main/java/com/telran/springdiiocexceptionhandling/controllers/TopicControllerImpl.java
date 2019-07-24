@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("topic")
@@ -46,18 +45,15 @@ public class TopicControllerImpl implements TopicController {
     @PostMapping
     public TopicResponseDto addTopic(@RequestBody TopicDto topicDto) {
         String owner = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-        String password = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getPassword();
-        System.out.println(owner + " " + password);
         TopicResponseDto res = TopicResponseDto.topicResponseBuilder()
-//                .id(UUID.randomUUID().toString())
                 .owner(owner)
                 .title(topicDto.getTitle())
                 .content(topicDto.getContent())
                 .date(LocalDateTime.now())
                 .build();
         try {
-            topicService.addTopic(res);
-
+            int id = topicService.addTopic(res);
+            res.setId(String.valueOf(id));
             controllerMetric.handleAddTopic();
         } catch (ServiceException ex) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, ex.getMessage());

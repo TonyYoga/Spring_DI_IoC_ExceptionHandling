@@ -6,7 +6,7 @@ import com.telran.springdiiocexceptionhandling.controllers.dto.comment.UpdateCom
 
 public interface CommentService {
 
-    void addComment(String topicId, CommentFullDto commentFullDto);
+    int addComment(String topicId, CommentFullDto commentFullDto);
 
     void removeComment(RemoveCommentDto remCommentDto);
 

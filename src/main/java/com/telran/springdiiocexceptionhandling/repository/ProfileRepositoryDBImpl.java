@@ -28,7 +28,10 @@ public class ProfileRepositoryDBImpl implements ProfileRepository{
             ps.setString(2, profile.getLastName());
             ps.setTimestamp(3, profile.getBDay());
             ps.setString(4, profile.getOwner());
-            return ps.execute();
+            if (ps.executeUpdate() == 0) {
+                throw new RepositoryException("Repository error!");
+            }
+            return true;
         } catch (SQLException e) {
             throw new RepositoryException(e.getMessage(), e);
         }
@@ -42,7 +45,10 @@ public class ProfileRepositoryDBImpl implements ProfileRepository{
             ps.setString(2, profile.getLastName());
             ps.setTimestamp(3, profile.getBDay());
             ps.setString(4, profile.getOwner());
-            return ps.execute(); //TODO need to check
+            if (ps.executeUpdate() == 0) {
+                throw new IllegalIdException(String.format("User with username %s not found!", profile.getOwner()));
+            }
+            return true;
         }
         catch (SQLException e) {
             throw new RepositoryException(e.getMessage(), e);

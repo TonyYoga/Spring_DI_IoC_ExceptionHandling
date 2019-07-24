@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("comment")
@@ -48,12 +47,13 @@ public class CommentControllerImpl implements CommentController {
         String owner = SecurityContextHolder.getContext().getAuthentication().getName();
         try {
             CommentFullDto commentFullDto = CommentFullDto.fullCommentBuilder()
-                    .id(UUID.randomUUID().toString())
+                    .id("0")
                     .owner(owner)
                     .message(addCommentDto.getMessage())
                     .date(LocalDateTime.now())
                     .build();
-            commentService.addComment(addCommentDto.getTopicId(), commentFullDto);
+            int id = commentService.addComment(addCommentDto.getTopicId(), commentFullDto);
+            commentFullDto.setId(String.valueOf(id));
             commentControllerMetric.handleAddComment();
             return commentFullDto;
         } catch (ServiceException ex) {

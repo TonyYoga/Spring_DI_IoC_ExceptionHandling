@@ -23,7 +23,6 @@ public class ProfileControllerImpl implements ProfileController {
     @PostMapping
     @Override
     public FullProfileDto addProfile(@RequestBody ProfileDto profile) {
-
         String owner = ((UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
         FullProfileDto fullProfileDto = FullProfileDto.fullProfileDto()
                 .email(owner)

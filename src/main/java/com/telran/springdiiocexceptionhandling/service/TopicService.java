@@ -5,7 +5,7 @@ import com.telran.springdiiocexceptionhandling.controllers.dto.topic.TopicRespon
 
 public interface TopicService {
 
-    void addTopic(TopicResponseDto topicResponseDto);
+    int addTopic(TopicResponseDto topicResponseDto);
 
     Iterable<TopicFullDto> getAllTopics();
 

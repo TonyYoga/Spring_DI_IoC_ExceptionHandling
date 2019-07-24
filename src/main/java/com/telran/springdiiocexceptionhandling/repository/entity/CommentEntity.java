@@ -3,8 +3,6 @@ package com.telran.springdiiocexceptionhandling.repository.entity;
 import lombok.*;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 @NoArgsConstructor
 @AllArgsConstructor

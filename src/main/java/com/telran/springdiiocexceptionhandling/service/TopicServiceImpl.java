@@ -29,9 +29,9 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
-    public void addTopic(TopicResponseDto topicResponseDto) {
+    public int addTopic(TopicResponseDto topicResponseDto) {
         try {
-            topicRepository.addTopic(map(topicResponseDto));
+            return topicRepository.addTopic(map(topicResponseDto));
         } catch (RepositoryException ex) {
             throw new ServiceException(ex.getMessage(),ex);
         }
@@ -56,7 +56,7 @@ public class TopicServiceImpl implements TopicService {
 
     private TopicEntity map(TopicResponseDto dto) {
         return new TopicEntity(
-                Integer.valueOf(dto.getId()),
+                0,
                 dto.getOwner(),
                 dto.getTitle(),
                 dto.getContent(),

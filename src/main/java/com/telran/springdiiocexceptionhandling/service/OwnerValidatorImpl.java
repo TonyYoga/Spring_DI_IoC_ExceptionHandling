@@ -27,8 +27,8 @@ public class OwnerValidatorImpl implements OwnerValidator {
     public boolean commentOwnerValidator(String topicId, String commentId, String owner) {
         try {
             CommentEntity entity = repository.getCommentById(Integer.valueOf(topicId), Integer.valueOf(commentId));
-            if (entity.getOwner().equals(owner)) {
-                throw new SecurityException("Wrong comment owner" + owner);
+            if (!entity.getOwner().equals(owner)) {
+                throw new SecurityException("Wrong comment owner: " + owner);
             }
             return true;
         } catch (IllegalIdException ex) {

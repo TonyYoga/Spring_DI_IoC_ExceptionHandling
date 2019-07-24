@@ -52,9 +52,10 @@ public class SecurityConfig {
                     throw new UsernameNotFoundException("No such email: " + email);
                 }
                 String[] roles = userRepository.getRoles(email);
-
+//              ----------------
                 System.out.println(userEntity.getEmail() + " " + userEntity.getPassword());
                 System.out.println(roles[0]);
+//               ------------------
                 return User.builder()
                         .username(userEntity.getEmail())
                         .password(userEntity.getPassword())

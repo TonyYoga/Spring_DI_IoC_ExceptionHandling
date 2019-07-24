@@ -34,7 +34,6 @@ public class UserControllerImpl implements UserController {
     public SuccessResponseDto registration(@RequestBody UserDto userDto) {
         try {
             userService.addUser(userDto);
-            System.out.println(userDto.getPassword());
             return new SuccessResponseDto("User with email " + userDto.getEmail() + " was added");
         } catch (ServiceException ex) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "User with email " + userDto.getEmail() + " already exist");
